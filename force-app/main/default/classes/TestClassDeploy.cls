@@ -1,3 +1,5 @@
 public class TestClassDeploy{
-  public static void testMethods(){}
+  public static void testMethods(){
+    //Hello World
+  }
 }
