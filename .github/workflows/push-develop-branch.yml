@@ -27,6 +27,6 @@ jobs:
                 sfdx-version: 'latest'
 
             - name: 'Authenticate Target Org'
-              run: sfdx force:auth:jwt:grant --clientid ${{ secrets.TARGET_CONSUMER_KEY }} --jwtkeyfile ./server.key --username ${{ secrets.TARGET_USERNAME }} --instanceurl ${{ secrets.TARGET_INSTANCE_URL }} --setldefaultdevhubusername -a targetOrg
+              run: sfdx force:auth:jwt:grant --clientid ${{ secrets.TARGET_CONSUMER_KEY }} --jwtkeyfile ./server.key --username ${{ secrets.TARGET_USERNAME }} --instanceurl ${{ secrets.TARGET_INSTANCE_URL }} --setdefaultdevhubusername -a targetOrg
 
 
