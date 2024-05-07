@@ -36,4 +36,7 @@ jobs:
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
+            - name: 'Deploy changes present in package.xml'
+              run: sfdx force:source:deploy --manifest package.xml
+
 
