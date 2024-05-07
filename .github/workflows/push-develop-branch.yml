@@ -26,7 +26,14 @@ jobs:
               with:
                 sfdx-version: 'latest'
 
-            - name: 'Authenticate Target Org'
-              run: sfdx force:auth:jwt:grant --clientid ${{ secrets.TARGET_CONSUMER_KEY }} --username ${{ secrets.TARGET_USERNAME }} --instanceurl ${{ secrets.TARGET_INSTANCE_URL }} --setdefaultdevhubusername -a targetOrg
+            # Store secret for both otgs
+            - name: 'Populate auth file with SFDX_URL secret of the QA'
+              shell: bash
+              run: |
+                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+
+            # Authenticate to org
+            - name: 'Authenticate to Integration Org'
+              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
 
