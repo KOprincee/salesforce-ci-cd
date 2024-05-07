@@ -1,0 +1,32 @@
+# Unique name for this workflow
+name: Deploy integration branch to integration and staging/uat orgs
+
+# Definition when the workflow should run
+on:
+    push:
+      paths:
+        - 'force-app/**'
+
+# Jobs to be executed
+jobs:
+    deploy-branch-to-QA-org:
+        runs-on: ubuntu-latest
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        steps:
+
+            # Checkout the source code
+            - name: 'Checkout source code'
+              uses: actions/checkout@v3
+              with:
+                fetch-depth: 0
+                
+            # Install Salesforce CLI
+            - name: 'Install Salesforce CLI'
+              uses: sfdx-actions/setup-sfdx@v1
+              with:
+                sfdx-version: 'latest'
+
+            - name: 'Authenticate Target Org'
+              run: sfdx force:auth:jwt:grant --clientid ${{ secrets.TARGET_CONSUMER_KEY }} --jwtkeyfile ./server.key --username ${{ secrets.TARGET_USERNAME }} --instanceurl ${{ secrets.TARGET_INSTANCE_URL }} --setldefaultdevhubusername -a targetOrg
+
+
