@@ -36,6 +36,10 @@ jobs:
             - name: 'Installing SFDX scanner'
               run: sfdx plugins:install @salesforce/sfdx-scanner
 
+            - name: 'Scan code'
+              run: |
+                  sfdx scanner:run --format csv --target './**/*.cls' --category "Design,Best Practices,Performance,Security" --outfile 'apexScanResults.csv'  
+
             # Store secret for both otgs
             - name: 'Populate auth file with SFDX_URL secret of the QA'
               shell: bash
