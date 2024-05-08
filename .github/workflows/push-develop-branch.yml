@@ -26,6 +26,16 @@ jobs:
               with:
                 sfdx-version: 'latest'
 
+            # Install java as it is required for the next step
+            - name: 'Installing java'
+              run: |
+                sudo apt-get update
+                sudo apt install default-jdk
+
+            # Install SFDX scanner
+            - name: 'Installing SFDX scanner'
+              run: sfdx plugins:install @salesforce/sfdx-scanner
+
             # Store secret for both otgs
             - name: 'Populate auth file with SFDX_URL secret of the QA'
               shell: bash
