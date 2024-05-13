@@ -1,5 +1,5 @@
 public class TestClassDeploy{
   public static void testMethods(){
-    //Hello Worldss
+    //Hello Worlds
     System.debug('test scanner');  }
 }
