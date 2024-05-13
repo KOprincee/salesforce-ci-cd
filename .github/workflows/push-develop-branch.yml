@@ -38,7 +38,7 @@ jobs:
 
             - name: 'Scan code'
               run: |
-                  sfdx scanner:run --target './**/*.cls' --category "Design,Best Practices,Performance,Security" --severity-threshold 3
+                  sfdx scanner:run --format csv --target './**/*.cls' --category "Design,Best Practices,Performance,Security" --normalize-severity --outfile runScannerChecks.csv
 
             # Store secret for both otgs
             - name: 'Populate auth file with SFDX_URL secret of the QA'
