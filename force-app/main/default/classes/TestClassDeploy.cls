@@ -3,5 +3,8 @@ public class TestClassDeploy{
     //Hello Worldss
     System.debug('test scanner'); 
     System.debug('test scanner');
+    if(a == 'Test'){
+        System.debug('test scanner');
+    }
 }
 }
