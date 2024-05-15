@@ -27,6 +27,11 @@ jobs:
               with:
                 sfdx-version: 'latest'
 
+            - name: 'Installing Node'
+              uses: actions/setup-node@v3
+              with:
+                node-version: '19'
+
             # Install java as it is required for the next step
             - name: 'Install Java'
               uses: actions/setup-java@v2
