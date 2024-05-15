@@ -31,7 +31,7 @@ jobs:
 
             - name: 'Parse TestCases'
               run: |
-                  node ./parsePR.js              
+                  node ./parse.js              
                   TESTS=$(cat testsToRun.txt)       
                   echo "APEX_TESTS=$TESTS"
                 
