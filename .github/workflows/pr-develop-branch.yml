@@ -41,8 +41,7 @@ jobs:
               run: |
                   mkdir scanned-code
                   cd scanned-code
-                  sfdx scanner:run --format sarif --target './**/*.cls' --category "category "Design,Best Practices,Performance,Security" --normalize-severity --outfile 'apexScanResults.sarif'
-                  sfdx scanner:run --format csv --target './**/*.cls' --category "category "Design,Best Practices,Performance,Security" --normalize-severity --outfile 'apexScanResults.csv'
+                  sfdx scanner:run --format sarif --target './**/*.cls' --category "Design,Best Practices,Performance,Security" --normalize-severity --outfile 'apexScanResults.sarif'
                   cd ..
 
             # Now we upload the .sarif file as explained in the previous step
