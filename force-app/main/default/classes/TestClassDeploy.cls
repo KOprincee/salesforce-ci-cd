@@ -5,6 +5,6 @@ public class TestClassDeploy{
         //Do something
     }
 
-    varNotDeclared = 'Tsetsing'
+    varNotDeclared = 'Tsetsing';
 }
 }
