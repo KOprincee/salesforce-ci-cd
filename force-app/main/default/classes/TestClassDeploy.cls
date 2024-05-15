@@ -8,6 +8,6 @@ public class TestClassDeploy{
     List<Account> acc = [Select ID from Account where Id = :varNotDeclared];
 }
     public void test1(String t1) {
-        Database.query('SELECT Id FROM Account' + t1);
+       Database.query('SELECT Id FROM Account' + t1);
     }
 }
