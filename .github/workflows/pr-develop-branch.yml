@@ -21,13 +21,19 @@ jobs:
               with:
                 fetch-depth: 0
 
-            - name: Set up Node.js
+            - name: 'Set up Node.js'
               uses: actions/setup-node@v2
               with:
                 node-version: 21
 
-            - name: Install dependencies
+            - name: 'Install dependencies'
               run: npm install xml2js
+
+            - name: 'Parse TestCases'
+              run: |
+                  node ./parsePR.js              
+                  TESTS=$(cat testsToRun.txt)       
+                  echo "APEX_TESTS=$TESTS"
                 
             # Install Salesforce CLI
             - name: 'Install Salesforce CLI'
