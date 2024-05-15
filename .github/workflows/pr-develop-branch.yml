@@ -40,13 +40,18 @@ jobs:
 
             - name: 'Scan code'
               run: |
-                  sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif' --severity-threshold 2
+                  sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --outfile 'apexScanResults.csv' --severity-threshold 2
 
-            # Now we upload the .sarif file and the plugin will check for any violations
-            - name: Upload SARIF file
-              uses: github/codeql-action/upload-sarif@v3
-              with:
-                sarif_file: apexScanResults.sarif
+            - name: 'Try to read the file'
+              run: |
+                  while IFS= read -r line; do
+                      echo "$line"
+                  done < apexScanResults.csv
+            # # Now we upload the .sarif file and the plugin will check for any violations
+            # - name: Upload SARIF file
+            #   uses: github/codeql-action/upload-sarif@v3
+            #   with:
+            #     sarif_file: apexScanResults.sarif
 
             # # Store secret for both otgs
             # - name: 'Populate auth file with SFDX_URL secret of the QA'
