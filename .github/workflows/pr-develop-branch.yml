@@ -28,14 +28,15 @@ jobs:
                 sfdx-version: 'latest'
 
             # Install java as it is required for the next step
-            - name: 'Installing java'
-              run: |
-                sudo apt-get update
-                sudo apt install default-jdk
+            - name: 'Install Java'
+              uses: actions/setup-java@v12
+              with:
+                distribution: 'adopt'
+                java-version: '11'
 
             # Install SFDX scanner
             - name: 'Installing SFDX scanner'
-              run: sfdx plugins:install @salesforce/sfdx-scanner
+              run: sfdx plugins:install @salesforce/sfdx-scanner@latest-beta
 
             - name: 'Scan code'
               run: |
