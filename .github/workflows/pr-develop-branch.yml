@@ -39,9 +39,13 @@ jobs:
 
             - name: 'Scan code'
               run: |
-                  sfdx scanner:run --target './**/*.cls' --format csv --outfile './apexScanResults.csv' --normalize-severity 
-            #      cd ..
-            
+                  sfdx scanner:run --target './**/*.cls' --format sarif --outfile 'apexScanResults.sarif' --normalize-severity 
+
+            # Now we upload the .sarif file and the plugin will check for any violations
+            - name: Upload SARIF file
+              uses: github/codeql-action/upload-sarif@v1
+              with:
+                sarif_file: changed-sources/apexScanResults.sarif
 
             # # Now we upload the .sarif file
             # - name: Upload SARIF file
