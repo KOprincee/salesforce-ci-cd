@@ -1,4 +1,4 @@
-public class rollUpHelper { 
+public class rollUpHelper{ 
     
     public static void insertDeleteOperation(List <Opportunity> newOpp){
         Set <Id> accId = new Set <Id>();
