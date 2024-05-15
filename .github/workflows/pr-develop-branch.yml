@@ -54,7 +54,7 @@ jobs:
 
             - name: 'List committed files'
               run: |
-                  git diff-tree --no-comit-id --name-only -r ${{ github.sha }}
+                  git diff-tree --no-commit-id --name-only -r ${{ github.sha }}
 
                   
             # # Now we upload the .sarif file and the plugin will check for any violations
