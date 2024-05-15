@@ -6,6 +6,5 @@ public class TestClassDeploy{
     }
     varNotDeclared = 'Tsetsing';
     List<Account> acc = [Select ID from Account where Id = :varNotDeclared];
-
 }
 }
