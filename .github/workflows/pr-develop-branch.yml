@@ -15,11 +15,11 @@ jobs:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
-            # # Checkout the source code
-            # - name: 'Checkout source code'
-            #   uses: actions/checkout@v3
-            #   with:
-            #     fetch-depth: 0
+            # Checkout the source code
+            - name: 'Checkout source code'
+              uses: actions/checkout@v3
+              with:
+                fetch-depth: 0
                 
             # Install Salesforce CLI
             - name: 'Install Salesforce CLI'
