@@ -2,7 +2,7 @@ public class TestClassDeploy{
   public static void testMethods(){
     String test = '10';
     if(test == '1000'){
-        //Do somethingd
+        //Do something
     }
     String varNotDeclared = 'Tsetsing';
     List<Account> acc = [Select ID from Account where Id = :varNotDeclared];
