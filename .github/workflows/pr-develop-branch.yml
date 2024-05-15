@@ -54,7 +54,7 @@ jobs:
 
             - name: 'List committed files'
               run: |
-                  git log -1 --name-only --pretty=format: ${{ github.sha }}
+                  git diff-tree --no-commit-id -r HEAD
 
                   
             # # Now we upload the .sarif file and the plugin will check for any violations
