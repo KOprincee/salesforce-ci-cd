@@ -4,6 +4,7 @@ public class TestClassDeploy{
     if(tesst == '1000'){
         //Do something
     }
+
     varNotDeclared = 'Tsetsing';
 }
 }
