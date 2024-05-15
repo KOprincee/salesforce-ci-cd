@@ -27,11 +27,6 @@ jobs:
               with:
                 sfdx-version: 'latest'
 
-            - name: 'Installing Node'
-              uses: actions/setup-node@v3
-              with:
-                node-version: '21'
-
             # Install java as it is required for the next step
             - name: 'Install Java'
               uses: actions/setup-java@v2
@@ -45,19 +40,13 @@ jobs:
 
             - name: 'Scan code'
               run: |
-                  sfdx scanner:run  --preview-pmd7 --target './**/*.cls' --format sarif --outfile 'apexScanResults.sarif'
+                  sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif' 
 
             # Now we upload the .sarif file and the plugin will check for any violations
             - name: Upload SARIF file
-              uses: github/codeql-action/upload-sarif@v1
+              uses: github/codeql-action/upload-sarif@v2
               with:
                 sarif_file: apexScanResults.sarif
-
-            # # Now we upload the .sarif file
-            # - name: Upload SARIF file
-            #   uses: github/codeql-action/upload-sarif@v1
-            #   with:
-            #     sarif_file: scanned-code/apexScanResults.sarif
 
             # # Store secret for both otgs
             # - name: 'Populate auth file with SFDX_URL secret of the QA'
