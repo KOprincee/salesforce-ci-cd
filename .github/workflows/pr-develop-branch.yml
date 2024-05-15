@@ -40,7 +40,7 @@ jobs:
 
             - name: 'Scan code'
               run: |
-                  sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif' 
+                  sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif' --severity-threshold 2
 
             # Now we upload the .sarif file and the plugin will check for any violations
             - name: Upload SARIF file
