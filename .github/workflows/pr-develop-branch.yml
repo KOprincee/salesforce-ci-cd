@@ -39,10 +39,9 @@ jobs:
 
             - name: 'Scan code'
               run: |
-            #     mkdir scanned-code
-            #     cd scanned-code
                   sfdx scanner:run --target './**/*.cls' --format csv --outfile './apexScanResults.csv' --normalize-severity 
             #      cd ..
+            
 
             # # Now we upload the .sarif file
             # - name: Upload SARIF file
