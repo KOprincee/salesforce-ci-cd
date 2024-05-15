@@ -27,35 +27,30 @@ jobs:
               with:
                 sfdx-version: 'latest'
 
-            # Install java as it is required for the next step
-            - name: 'Install Java'
-              uses: actions/setup-java@v2
-              with:
-                distribution: 'adopt'
-                java-version: '11'
+            # # Install java as it is required for the next step
+            # - name: 'Install Java'
+            #   uses: actions/setup-java@v2
+            #   with:
+            #     distribution: 'adopt'
+            #     java-version: '11'
 
-            # Install SFDX scanner
-            - name: 'Installing SFDX scanner'
-              run: sfdx plugins:install @salesforce/sfdx-scanner@latest
+            # # Install SFDX scanner
+            # - name: 'Installing SFDX scanner'
+            #   run: sfdx plugins:install @salesforce/sfdx-scanner@latest
 
-            - name: 'Scan code'
-              run: |
-                  sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --outfile 'apexScanResults.csv' --severity-threshold 2
+            # - name: 'Scan code'
+            #   run: |
+            #       sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --outfile 'apexScanResults.csv' --severity-threshold 2
 
-            - name: 'Try to read the file'
-              run: |
-                  while IFS= read -r line; do
-                      echo "$line"
-                  done < apexScanResults.csv
+            # - name: 'Try to read the file'
+            #   run: |
+            #       while IFS= read -r line; do
+            #           echo "$line"
+            #       done < apexScanResults.csv
 
-            - name: 'Scan code'
-              run: |
-                  sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif' --severity-threshold 2
-
-            - name: 'List committed files'
-              run: |
-                  git diff-tree --no-commit-id -r HEAD
-
+            # - name: 'Scan code'
+            #   run: |
+            #       sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif' --severity-threshold 2
                   
             # # Now we upload the .sarif file and the plugin will check for any violations
             # - name: Upload SARIF file
@@ -63,17 +58,17 @@ jobs:
             #   with:
             #     sarif_file: apexScanResults.sarif
 
-            # # Store secret for both otgs
-            # - name: 'Populate auth file with SFDX_URL secret of the QA'
-            #   shell: bash
-            #   run: |
-            #       echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+            # Store secret for both otgs
+            - name: 'Populate auth file with SFDX_URL secret of the QA'
+              shell: bash
+              run: |
+                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
 
-            # # Authenticate to org
-            # - name: 'Authenticate to Integration Org'
-            #   run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+            # Authenticate to org
+            - name: 'Authenticate to Integration Org'
+              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
-            # - name: 'Deploy changes present in package.xml'
-            #   run: sfdx force:source:deploy --manifest package.xml
+            - name: 'Deploy changes present in package.xml'
+              run: sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}}
 
 
