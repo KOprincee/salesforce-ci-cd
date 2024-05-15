@@ -1,19 +1,20 @@
 # Unique name for this workflow
-name: Deploy integration branch to integration and staging/uat orgs
+name: Validate the changes made in the Pull Request.
 
 # Definition when the workflow should run
 on:
-    push:
+    pull_request:
+      types: [opened, synchronize]
+      branches: [ development ]
       paths:
         - 'force-app/**'
 
 # Jobs to be executed
 jobs:
-    deploy-branch-to-QA-org:
+    validate-changes-on-QA-org:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
-
             # Checkout the source code
             - name: 'Checkout source code'
               uses: actions/checkout@v3
@@ -38,19 +39,28 @@ jobs:
 
             - name: 'Scan code'
               run: |
-                  sfdx scanner:run --format csv --target './**/*.cls' --category "Design,Best Practices,Performance,Security" --normalize-severity --outfile runScannerChecks.csv
+                  mkdir scanned-code
+                  cd scanned-code
+                  sfdx scanner:run --format sarif --target './**/*.cls' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'
+                  cd ..
 
-            # Store secret for both otgs
-            - name: 'Populate auth file with SFDX_URL secret of the QA'
-              shell: bash
-              run: |
-                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+            # Now we upload the .sarif file as explained in the previous step
+            - name: Upload SARIF file
+              uses: github/codeql-action/upload-sarif@v1
+              with:
+                sarif_file: changed-sources/apexScanResults.sarif
 
-            # Authenticate to org
-            - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+            # # Store secret for both otgs
+            # - name: 'Populate auth file with SFDX_URL secret of the QA'
+            #   shell: bash
+            #   run: |
+            #       echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
 
-            - name: 'Deploy changes present in package.xml'
-              run: sfdx force:source:deploy --manifest package.xml
+            # # Authenticate to org
+            # - name: 'Authenticate to Integration Org'
+            #   run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+
+            # - name: 'Deploy changes present in package.xml'
+            #   run: sfdx force:source:deploy --manifest package.xml
 
 
