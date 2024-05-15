@@ -5,7 +5,7 @@ public class rollUpSummaryTest {
     public static void testData(){
         Account acc = new Account (Name = 'TestAccount');
         insert acc;
-        
+    
         List <Opportunity> newOp = new List <Opportunity>();
         for(Integer i = 0; i< 5; i++){
             Opportunity op = new Opportunity(AccountId = acc.Id, 
