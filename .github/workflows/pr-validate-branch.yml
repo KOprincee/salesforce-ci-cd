@@ -21,76 +21,84 @@ jobs:
               with:
                 fetch-depth: 0
 
-            # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
-            - name: 'Set up Node.js'
-              uses: actions/setup-node@v2
-              with:
-                node-version: 21
-
-            - name: 'Install dependencies to Parse TestCases'
-              run: npm install xml2js
-            
-            # Install Salesforce CLI
-            - name: 'Install Salesforce CLI'
-              uses: sfdx-actions/setup-sfdx@v1
-              with:
-                sfdx-version: 'latest'
-
-            # Install java as it is required for Salesforce Scanner
-            - name: 'Install Java'
-              uses: actions/setup-java@v2
-              with:
-                distribution: 'adopt'
-                java-version: '11'
-
-            # Install SFDX scanner
-            - name: 'Installing SFDX scanner'
-              run: sfdx plugins:install @salesforce/sfdx-scanner@latest
-
-            - name: 'Scan code - Doing to Display it on PR created'
+            - name: get changed files
+              id: getfile
               run: |
-                  sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.sarif'
+                  echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} )"
+            - name: echo output
+              run: |
+                  echo ${{ steps.getfile.outputs.files }}
+
+            # # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
+            # - name: 'Set up Node.js'
+            #   uses: actions/setup-node@v2
+            #   with:
+            #     node-version: 21
+
+            # - name: 'Install dependencies to Parse TestCases'
+            #   run: npm install xml2js
+            
+            # # Install Salesforce CLI
+            # - name: 'Install Salesforce CLI'
+            #   uses: sfdx-actions/setup-sfdx@v1
+            #   with:
+            #     sfdx-version: 'latest'
+
+            # # Install java as it is required for Salesforce Scanner
+            # - name: 'Install Java'
+            #   uses: actions/setup-java@v2
+            #   with:
+            #     distribution: 'adopt'
+            #     java-version: '11'
+
+            # # Install SFDX scanner
+            # - name: 'Installing SFDX scanner'
+            #   run: sfdx plugins:install @salesforce/sfdx-scanner@latest
+
+            # - name: 'Scan code - Doing to Display it on PR created'
+            #   run: |
+            #       sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.sarif'
                   
-            # Now we upload the .sarif file and the plugin will check for any violations
-            - name: 'Upload SARIF file on PR'
-              uses: github/codeql-action/upload-sarif@v2
-              with:
-                sarif_file: apexScanResults.sarif
-                category: error, warning
+            # # Now we upload the .sarif file and the plugin will check for any violations
+            # - name: 'Upload SARIF file on PR'
+            #   uses: github/codeql-action/upload-sarif@v2
+            #   with:
+            #     sarif_file: apexScanResults.sarif
+            #     category: error, warning
 
-            - name: 'Scan code - Doing in csv for debugging purpose'
-              run: |
-                  sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
-            - name: 'Try to read the file - Debugging Purpose'
-              run: |
-                  while IFS= read -r line; do
-                      echo "$line"
-                  done < apexScanResults.csv
+            # - name: 'Scan code - Doing in csv for debugging purpose'
+            #   run: |
+            #       sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
+            # - name: 'Try to read the file - Debugging Purpose'
+            #   run: |
+            #       while IFS= read -r line; do
+            #           echo "$line"
+            #       done < apexScanResults.csv
             
-            - name: 'Parse TestCases present in build.xml'
-              run: |
-                  node parse.js              
-                  TESTS=$(cat ApexTests.txt)       
-                  echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
+            # - name: 'Parse TestCases present in build.xml'
+            #   run: |
+            #       node parse.js              
+            #       TESTS=$(cat ApexTests.txt)       
+            #       echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
 
-            # Store secret for both otgs
-            - name: 'Populate auth file with SFDX_URL secret of the QA'
-              shell: bash
-              run: |
-                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+            # # Store secret for both otgs
+            # - name: 'Populate auth file with SFDX_URL secret of the QA'
+            #   shell: bash
+            #   run: |
+            #       echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
 
-            # Authenticate to org
-            - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+            # # Authenticate to org
+            # - name: 'Authenticate to Integration Org'
+            #   run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
-            # Validate the changes and run the testCases if required
-            - name: 'Validate changes present in package.xml - Run Tests'
-              if: ${{ env.APEX_TESTS != '' }}
-              run: |
-                  sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --verbose
+            # # Validate the changes and run the testCases if required
+            # - name: 'Validate changes present in package.xml - Run Tests'
+            #   if: ${{ env.APEX_TESTS != '' }}
+            #   run: |
+            #       sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --verbose
 
-            - name: 'Deploy changes present in package.xml - No Tests specified'
-              if: ${{ env.APEX_TESTS == '' }}
-              run: |
-                  sfdx force:source:deploy --manifest package.xml --checkonly --verbose
+            # - name: 'Deploy changes present in package.xml - No Tests specified'
+            #   if: ${{ env.APEX_TESTS == '' }}
+            #   run: |
+            #       sfdx force:source:deploy --manifest package.xml --checkonly --verbose
                   
