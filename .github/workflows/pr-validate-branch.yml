@@ -33,7 +33,7 @@ jobs:
             - name: 'Parse TestCases present in nodeJs'
               run: |
                   node parse.js              
-                  echo $APEX_TESTS
+                  echo "APEX_TESTS=$APEX_TESTS" >> $GITHUB_ENV
             
             # - name: 'Testing If Conditions'
             #   if: ${{ $APEX_TESTS == ''}}
@@ -91,5 +91,13 @@ jobs:
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
             # Validate the changes and run the testCases if required
-            - name: 'Deploy changes present in package.xml'
-              run: sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests $APEX_TESTS --verbose --json
+            - name: 'Validate changes present in package.xml - Run Tests'
+              if: ${{ env.APEX_TESTS != '' }}
+              run: |
+                  sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests env.APEX_TESTS --verbose --json
+
+            - name: 'Deploy changes present in package.xml - No Tests specified'
+              if: ${{ env.APEX_TESTS == '' }}
+              run: |
+                  sfdx force:source:deploy --manifest package.xml --checkonly
+                  
