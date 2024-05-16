@@ -1,6 +1,9 @@
-//Demo CI/CD
-
+//Test
 public class rollUpHelper{ 
+
+    public void test1(String t1) {
+        Database.query('SELECT Id FROM Account' + t1);
+    }
     
     public static void insertDeleteOperation(List <Opportunity> newOpp){
         Set <Id> accId = new Set <Id>();
@@ -17,7 +20,7 @@ public class rollUpHelper{
         //Comparng the updated opportunities; 
         //And if both are not same adding them to the Set so the count can be updated
         for(Opportunity op : updatedOpp){
-            
+            System.debug('test');
             //Checking if the accountId is changed on the Opportunity
             if(oldOpp.get(op.Id).AccountId != op.AccountId ){
                 accId.add(op.AccountId);
