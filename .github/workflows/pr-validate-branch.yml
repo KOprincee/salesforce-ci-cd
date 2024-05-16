@@ -35,13 +35,13 @@ jobs:
                   node parse.js              
                   echo $APEX_TESTS
             
-            - name: 'Testing If Conditions'
-              if: ${{ $APEX_TESTS == ''}}
-              run: echo 'Apex Test is NULL'
+            # - name: 'Testing If Conditions'
+            #   if: ${{ $APEX_TESTS == ''}}
+            #   run: echo 'Apex Test is NULL'
 
-            - name: 'Test'
-              if: ${{ $APEX_TESTS != ''}}
-              run: echo 'Apex Test is NOT NULL'
+            # - name: 'Test'
+            #   if: ${{ $APEX_TESTS != ''}}
+            #   run: echo 'Apex Test is NOT NULL'
                 
             # # Install Salesforce CLI
             # - name: 'Install Salesforce CLI'
@@ -80,16 +80,16 @@ jobs:
             #   with:
             #     sarif_file: apexScanResults.sarif
 
-            # # Store secret for both otgs
-            # - name: 'Populate auth file with SFDX_URL secret of the QA'
-            #   shell: bash
-            #   run: |
-            #       echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+            # Store secret for both otgs
+            - name: 'Populate auth file with SFDX_URL secret of the QA'
+              shell: bash
+              run: |
+                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
 
-            # # Authenticate to org
-            # - name: 'Authenticate to Integration Org'
-            #   run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+            # Authenticate to org
+            - name: 'Authenticate to Integration Org'
+              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
-            # # Validate the changes and run the testCases if required
-            # - name: 'Deploy changes present in package.xml'
-            #   run: sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests $APEX_TESTS --verbose --json
+            # Validate the changes and run the testCases if required
+            - name: 'Deploy changes present in package.xml'
+              run: sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests $APEX_TESTS --verbose --json
