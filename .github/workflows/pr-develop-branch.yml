@@ -16,31 +16,40 @@ jobs:
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
             # Checkout the source code
-            - name: 'Checkout source code'
+            - name: 'Checkout source code to create Virtual Repository'
               uses: actions/checkout@v3
               with:
                 fetch-depth: 0
 
+            # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
             - name: 'Set up Node.js'
               uses: actions/setup-node@v2
               with:
                 node-version: 21
 
-            - name: 'Install dependencies'
+            - name: 'Install dependencies to Parse TestCases'
               run: npm install xml2js
 
-            - name: 'Parse TestCases'
+            - name: 'Parse TestCases present in nodeJs'
               run: |
                   node parse.js              
                   echo $APEX_TESTS
-                
-            # Install Salesforce CLI
-            - name: 'Install Salesforce CLI'
-              uses: sfdx-actions/setup-sfdx@v1
-              with:
-                sfdx-version: 'latest'
+            
+            - name: 'Testing If Conditions'
+              if: ${{ $APEX_TESTS == ''}}
+              run: echo 'Apex Test is NULL'
 
-            # # Install java as it is required for the next step
+            - name: 'Test'
+              if: ${{ $APEX_TESTS != ''}}
+              run: echo 'Apex Test is NOT NULL'
+                
+            # # Install Salesforce CLI
+            # - name: 'Install Salesforce CLI'
+            #   uses: sfdx-actions/setup-sfdx@v1
+            #   with:
+            #     sfdx-version: 'latest'
+
+            # # Install java as it is required for Salesforce Scanner
             # - name: 'Install Java'
             #   uses: actions/setup-java@v2
             #   with:
@@ -51,22 +60,22 @@ jobs:
             # - name: 'Installing SFDX scanner'
             #   run: sfdx plugins:install @salesforce/sfdx-scanner@latest
 
-            # - name: 'Scan code'
+            # - name: 'Scan code - Doing in csv for debugging purpose'
             #   run: |
             #       sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --outfile 'apexScanResults.csv' --severity-threshold 2
 
-            # - name: 'Try to read the file'
+            # - name: 'Try to read the file - Debugging Purpose'
             #   run: |
             #       while IFS= read -r line; do
             #           echo "$line"
             #       done < apexScanResults.csv
 
-            # - name: 'Scan code'
+            # - name: 'Scan code - Doing to Display it on PR created'
             #   run: |
             #       sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif' --severity-threshold 2
                   
             # # Now we upload the .sarif file and the plugin will check for any violations
-            # - name: Upload SARIF file
+            # - name: 'Upload SARIF file on PR'
             #   uses: github/codeql-action/upload-sarif@v3
             #   with:
             #     sarif_file: apexScanResults.sarif
@@ -81,5 +90,6 @@ jobs:
             # - name: 'Authenticate to Integration Org'
             #   run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
+            # # Validate the changes and run the testCases if required
             # - name: 'Deploy changes present in package.xml'
-            #   run: sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests rollUpSummaryTest --verbose --json
+            #   run: sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests $APEX_TESTS --verbose --json
