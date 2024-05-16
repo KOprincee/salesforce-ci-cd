@@ -49,7 +49,12 @@ jobs:
 
             - name: 'Scan code - Doing in csv for debugging purpose'
               run: |
-                  sfdx scanner:run --target './**/*.cls' --engine pmd,eslint
+                  sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --outfile 'apexScanResults.csv' --severity-threshold 2
+            - name: 'Try to read the file - Debugging Purpose'
+              run: |
+                  while IFS= read -r line; do
+                      echo "$line"
+                  done < apexScanResults.csv
 
             - name: 'Scan code - Doing to Display it on PR created'
               run: |
