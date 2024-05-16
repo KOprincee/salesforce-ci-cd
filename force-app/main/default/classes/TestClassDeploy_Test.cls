@@ -6,7 +6,7 @@ public class TestClassDeply_Test{
           test.startTest();          
           t.testMethods();
           test.stopTest();
-    }
+    } 
     @isTest
     public void test2(){
           TestClassDeploy t = new TestClassDeploy();
