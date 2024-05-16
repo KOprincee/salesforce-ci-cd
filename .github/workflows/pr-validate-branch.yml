@@ -33,7 +33,7 @@ jobs:
             - name: 'Parse TestCases present in nodeJs'
               run: |
                   node parse.js              
-                  echo "APEX_TESTS=$TestClasses" >> $GITHUB_ENV
+                  echo "APEX_TESTS=$APEX_TESTS" >> $GITHUB_ENV
             
             # - name: 'Testing If Conditions'
             #   if: ${{ $APEX_TESTS == ''}}
@@ -93,7 +93,7 @@ jobs:
             - name: 'Tets Apex Class'
               shell: bash
               run: |
-                  echo ${{ env.APEX_TESTS }}
+                  echo $APEX_TESTS
 
             # Validate the changes and run the testCases if required
             - name: 'Validate changes present in package.xml - Run Tests'
