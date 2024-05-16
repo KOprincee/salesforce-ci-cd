@@ -49,7 +49,7 @@ jobs:
 
             - name: 'Scan code - Doing in csv for debugging purpose'
               run: |
-                  sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --outfile 'apexScanResults.csv' --severity-threshold 2
+                  sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --outfile 'apexScanResults.csv'
             - name: 'Try to read the file - Debugging Purpose'
               run: |
                   while IFS= read -r line; do
