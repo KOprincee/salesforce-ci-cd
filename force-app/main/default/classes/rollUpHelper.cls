@@ -6,7 +6,7 @@ public class rollUpHelper{
             accId.add(op.AccountId);
         }
         updateRollupFields(accId);
-    }
+    } 
     
     public static void updateOperation(List <Opportunity> updatedOpp, Map<Id, Opportunity> oldOpp){
         
