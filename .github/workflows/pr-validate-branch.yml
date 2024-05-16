@@ -35,11 +35,13 @@ jobs:
                   node parse.js              
                   echo "APEX_TEST=$APEX_TESTS" >> $GITHUB_ENV
                   echo "TEST_CLASS=TEST_VALUE" >> $GITHUB_ENV
+                  echo $APEX_TESTS
 
             - name: 'Tets Apex Class'
               shell: bash
               run: |
                   echo $APEX_TEST
+                  echo $APEX_TESTS
                   echo $TEST_CLASS
             
             # - name: 'Testing If Conditions'
