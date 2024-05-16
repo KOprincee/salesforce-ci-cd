@@ -19,7 +19,6 @@ async function extractTests() {
       runTestsString = runTests.join(","); // Combine values into a single string
 
       process.env.APEX_TESTS = runTestsString;
-      console.log(runTestsString);
     });
   });
 }
