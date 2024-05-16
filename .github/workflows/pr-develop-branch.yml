@@ -35,13 +35,13 @@ jobs:
                   node parse.js              
                   echo $APEX_TESTS
             
-            - name: 'Testing If Conditions'
-              if: ${{ $APEX_TESTS == ''}}
-              run: echo 'Apex Test is NULL'
+            # - name: 'Testing If Conditions'
+            #   if: ${{ $APEX_TESTS == ''}}
+            #   run: echo 'Apex Test is NULL'
 
-            - name: 'Test'
-              if: ${{ $APEX_TESTS != ''}}
-              run: echo 'Apex Test is NOT NULL'
+            # - name: 'Test'
+            #   if: ${{ $APEX_TESTS != ''}}
+            #   run: echo 'Apex Test is NOT NULL'
                 
             # # Install Salesforce CLI
             # - name: 'Install Salesforce CLI'
