@@ -39,11 +39,11 @@ jobs:
             # - name: 'Install dependencies to Parse TestCases'
             #   run: npm install xml2js
             
-            # # Install Salesforce CLI
-            # - name: 'Install Salesforce CLI'
-            #   uses: sfdx-actions/setup-sfdx@v1
-            #   with:
-            #     sfdx-version: 'latest'
+            # Install Salesforce CLI
+            - name: 'Install Salesforce CLI'
+              uses: sfdx-actions/setup-sfdx@v1
+              with:
+                sfdx-version: 'latest'
 
             # Install java as it is required for Salesforce Scanner
             - name: 'Install Java'
