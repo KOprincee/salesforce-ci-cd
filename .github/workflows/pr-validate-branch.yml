@@ -24,10 +24,10 @@ jobs:
             - name: get changed files
               id: getfile
               run: |
-                  echo "::set-output name=files::$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} )"
+                  git diff --name-only ${{ github.base_ref}} ${{ github.sha }}
             - name: echo output
               run: |
-                  echo ${{ steps.getfile.outputs.files }}
+                  git help diff-tree
 
             # # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
             # - name: 'Set up Node.js'
