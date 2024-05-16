@@ -15,7 +15,7 @@ async function extractTests() {
       }
 
       // Extract the values of runTest tag
-      const runTests = result.TestSuite.runTest;
+      const runTests = result.APEX_TESTS.runTest;
       runTestsString = runTests.join(","); // Combine values into a single string
 
       process.env.TestClasses = runTestsString;
