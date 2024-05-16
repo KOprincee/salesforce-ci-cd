@@ -33,7 +33,14 @@ jobs:
             - name: 'Parse TestCases present in nodeJs'
               run: |
                   node parse.js              
-                  echo "APEX_TESTS=$APEX_TESTS" >> $GITHUB_ENV
+                  echo "APEX_TEST=$APEX_TESTS" >> $GITHUB_ENV
+                  echo "TEST_CLASS=TEST_VALUE" >> $GITHUB_ENV
+
+            - name: 'Tets Apex Class'
+              shell: bash
+              run: |
+                  echo $APEX_TEST
+                  echo $TEST_CLASS
             
             # - name: 'Testing If Conditions'
             #   if: ${{ $APEX_TESTS == ''}}
@@ -80,29 +87,24 @@ jobs:
             #   with:
             #     sarif_file: apexScanResults.sarif
 
-            # Store secret for both otgs
-            - name: 'Populate auth file with SFDX_URL secret of the QA'
-              shell: bash
-              run: |
-                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+            # # Store secret for both otgs
+            # - name: 'Populate auth file with SFDX_URL secret of the QA'
+            #   shell: bash
+            #   run: |
+            #       echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
 
-            # Authenticate to org
-            - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+            # # Authenticate to org
+            # - name: 'Authenticate to Integration Org'
+            #   run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
-            - name: 'Tets Apex Class'
-              shell: bash
-              run: |
-                  echo $APEX_TESTS
+            # # Validate the changes and run the testCases if required
+            # - name: 'Validate changes present in package.xml - Run Tests'
+            #   if: ${{ env.APEX_TESTS != '' }}
+            #   run: |
+            #       sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests env.APEX_TESTS --verbose --json
 
-            # Validate the changes and run the testCases if required
-            - name: 'Validate changes present in package.xml - Run Tests'
-              if: ${{ env.APEX_TESTS != '' }}
-              run: |
-                  sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests env.APEX_TESTS --verbose --json
-
-            - name: 'Deploy changes present in package.xml - No Tests specified'
-              if: ${{ env.APEX_TESTS == '' }}
-              run: |
-                  sfdx force:source:deploy --manifest package.xml --checkonly
+            # - name: 'Deploy changes present in package.xml - No Tests specified'
+            #   if: ${{ env.APEX_TESTS == '' }}
+            #   run: |
+            #       sfdx force:source:deploy --manifest package.xml --checkonly
                   
