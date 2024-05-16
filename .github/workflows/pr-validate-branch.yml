@@ -58,7 +58,7 @@ jobs:
 
             - name: 'Scan code - Doing to Display it on PR created'
               run: |
-                  sfdx scanner:run --target changed_files --format sarif --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.sarif'
+                  sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format sarif --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.sarif'
                   
             # Now we upload the .sarif file and the plugin will check for any violations
             - name: 'Upload SARIF file on PR'
@@ -69,7 +69,7 @@ jobs:
 
             - name: 'Scan code - Doing in csv for debugging purpose'
               run: |
-                  sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
+                  sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
             - name: 'Try to read the file - Debugging Purpose'
               run: |
                   while IFS= read -r line; do
