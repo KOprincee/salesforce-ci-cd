@@ -63,7 +63,7 @@ jobs:
                   
             # Now we upload the .sarif file and the plugin will check for any violations
             - name: 'Upload SARIF file on PR'
-              uses: github/codeql-action/upload-sarif@v3
+              uses: github/codeql-action/upload-sarif@v2
               with:
                 sarif_file: apexScanResults.sarif
 
