@@ -25,9 +25,7 @@ async function extractTests(){
     });
 
     let testsFile = __dirname+'/testsToRun.txt';
-    await fs.promises.writeFile(testsFile,'all');
-
-    await fs.promises.writeFile(testsFile,tests);
+    await fs.promises.writeFile(testsFile,runTestsString);
     await fs.promises.appendFile(testsFile,'\n');
 }
 
