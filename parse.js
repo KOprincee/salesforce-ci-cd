@@ -15,10 +15,10 @@ async function extractTests() {
       }
 
       // Extract the values of runTest tag
-      const runTests = result.APEX_TESTS.runTest;
+      const runTests = result.TestSuite.runTest;
       runTestsString = runTests.join(","); // Combine values into a single string
 
-      process.env.TestClasses = runTestsString;
+      process.env.APEX_TESTS = runTestsString;
       console.log(runTestsString);
     });
   });
