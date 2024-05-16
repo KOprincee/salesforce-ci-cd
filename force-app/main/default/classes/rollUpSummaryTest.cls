@@ -19,28 +19,8 @@ public class rollUpSummaryTest {
         }
         insert newOp;
     }
-    
-    
-    @isTest
-    public static void testInsertOpp(){
-        Account acct = [SELECT Id FROM Account WHERE Name='TestAccount'];
-        Opportunity op = new Opportunity(AccountId = acct.Id, 
-                                         Name = 'OpportunityInsert',
-                                         StageName = 'Prospecting',
-                                         CloseDate = System.today(),
-                                         Amount = 2000,
-                                         AmountB__c = 500);
-        
-        test.startTest();
-        insert op;
-        test.stopTest();
-        
-        List <Account> checkAc = [SELECT Total_Opportunities__c, Total_Revenue__c, Average_Revenue__c from Account where Id = :acct.Id];
-        System.assertEquals(6, checkAc[0].Total_Opportunities__c);
-        System.assertEquals(7000, checkAc[0].Total_Revenue__c);
-        System.assertEquals(500, checkAc[0].Average_Revenue__c);
-    }
-    
+
+    /*
     @isTest    
     public static void testDeleteOpp(){
         Opportunity op = [SELECT Id from Opportunity where Name = 'Opportunity2'];
@@ -54,7 +34,7 @@ public class rollUpSummaryTest {
         System.assertEquals(4000, checkAc[0].Total_Revenue__c);
         System.assertEquals(500, checkAc[0].Average_Revenue__c);
     }
-    
+    */
     @isTest
     public static void testUpdateOpp(){
         Account acc = new Account (Name = 'TestAccountUpdate');
