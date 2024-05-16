@@ -7,7 +7,7 @@ public class rollUpHelper{
         }
         updateRollupFields(accId);
     }
-    
+     
     public static void updateOperation(List <Opportunity> updatedOpp, Map<Id, Opportunity> oldOpp){
         
         Set <Id> accId = new Set <Id>();
