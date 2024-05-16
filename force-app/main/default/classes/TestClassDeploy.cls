@@ -1,5 +1,5 @@
 public class TestClassDeploy{
   public static void testMethods(){
-    //Helxlo Worldss
+    //Helxlo Worlds
     System.debug('test scanner');  }
 }
