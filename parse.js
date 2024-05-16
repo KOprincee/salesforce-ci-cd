@@ -1,33 +1,27 @@
-const fs = require('fs');
-const xml2js = require('xml2js');
+const fs = require("fs");
+const xml2js = require("xml2js");
+let runTestsString = "";
+async function extractTests() {
+  fs.readFile(__dirname + "/build.xml", (err, data) => {
+    if (err) {
+      console.error("Error reading XML file:", err);
+      return;
+    }
+    // Parse the XML data
+    xml2js.parseString(data, (err, result) => {
+      if (err) {
+        console.error("Error parsing XML:", err);
+        return;
+      }
 
-async function extractTests(){
-    let runTestsString = '';
-    fs.readFile(__dirname + '/build.xml', (err, data) => {
-        if (err) {
-            console.error('Error reading XML file:', err);
-            return;
-        }
-    
-        // Parse the XML data
-        xml2js.parseString(data, (err, result) => {
-            if (err) {
-                console.error('Error parsing XML:', err);
-                return;
-            }
-    
-            // Extract the values of runTest tags
-            const runTests = result.TestSuite.runTest;
-            runTestsString = runTests.join(', ');  // Combine values into a single string
+      // Extract the values of runTest tags
+      const runTests = result.TestSuite.runTest;
+      runTestsString = runTests.join(", "); // Combine values into a single string
 
-            console.log(runTestsString);
-        });
+      process.env.APEX_TESTS = runTestsString;
+      console.log(runTestsString);
     });
-
-    let testsFile = __dirname+'/testsToRun.txt';
-    await fs.promises.writeFile(testsFile,runTestsString);
-    await fs.promises.appendFile(testsFile,'\n');
+  });
 }
-
 
 extractTests();
