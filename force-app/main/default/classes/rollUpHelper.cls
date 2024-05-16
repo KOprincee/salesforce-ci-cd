@@ -3,7 +3,7 @@ public class rollUpHelper{
     public static void insertDeleteOperation(List <Opportunity> newOpp){
         Set <Id> accId = new Set <Id>();
         for(Opportunity op : newOpp){
-            accId.add(op.AccountId);
+            accId.add(op.AccountId); 
         }
         updateRollupFields(accId);
     }
