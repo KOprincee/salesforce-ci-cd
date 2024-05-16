@@ -2,7 +2,7 @@ const fs = require('fs');
 const xml2js = require('xml2js');
 
 async function extractTests(){
-    const runTestsString = '';
+    let runTestsString = '';
     fs.readFile(__dirname + '/build.xml', (err, data) => {
         if (err) {
             console.error('Error reading XML file:', err);
