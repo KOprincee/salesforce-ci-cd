@@ -12,7 +12,7 @@ public class rollUpHelper{
         
         Set <Id> accId = new Set <Id>();
         
-        //Comparing the updated opportunities; 
+        //Comparng the updated opportunities; 
         //And if both are not same adding them to the Set so the count can be updated
         for(Opportunity op : updatedOpp){
             
