@@ -4,9 +4,8 @@ public class TestClassDeploy{
     System.debug('test scanner');  
     String test = '';
     if(test == ''){
-        //DO SOMETHING 
+         //DO SOMETHING 
     }
-
 }
 public void test1(String t1) {
         Database.query('SELECT Id FROM Account' + t1);
