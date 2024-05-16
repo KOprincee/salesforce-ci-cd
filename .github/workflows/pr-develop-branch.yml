@@ -26,14 +26,14 @@ jobs:
               with:
                 node-version: 21
 
-            # - name: 'Install dependencies'
-            #   run: npm install xml2js
+            - name: 'Install dependencies'
+              run: npm install xml2js
 
-            # - name: 'Parse TestCases'
-            #   run: |
-            #       node ./parse.js              
-            #       TESTS=$(cat testsToRun.txt)       
-            #       echo "APEX_TESTS=$TESTS"
+            - name: 'Parse TestCases'
+              run: |
+                  node ./parse.js              
+                  TESTS=$(cat testsToRun.txt)       
+                  echo "APEX_TESTS=$TESTS"
                 
             # Install Salesforce CLI
             - name: 'Install Salesforce CLI'
