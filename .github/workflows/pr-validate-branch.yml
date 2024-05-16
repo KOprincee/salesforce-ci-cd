@@ -33,7 +33,7 @@ jobs:
             - name: 'Parse TestCases present in nodeJs'
               run: |
                   node parse.js              
-                  echo "APEX_TESTS=$APEX_TESTS" >> $GITHUB_ENV
+                  echo "APEX_TESTS=$TestClasses" >> $GITHUB_ENV
             
             # - name: 'Testing If Conditions'
             #   if: ${{ $APEX_TESTS == ''}}
@@ -89,6 +89,11 @@ jobs:
             # Authenticate to org
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+
+            - name: 'Tets Apex Class'
+              shell: bash
+              run: |
+                  echo ${{ env.APEX_TESTS }}
 
             # Validate the changes and run the testCases if required
             - name: 'Validate changes present in package.xml - Run Tests'
