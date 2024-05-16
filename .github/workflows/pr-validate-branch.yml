@@ -36,36 +36,36 @@ jobs:
               with:
                 sfdx-version: 'latest'
 
-            # # Install java as it is required for Salesforce Scanner
-            # - name: 'Install Java'
-            #   uses: actions/setup-java@v2
-            #   with:
-            #     distribution: 'adopt'
-            #     java-version: '11'
+            # Install java as it is required for Salesforce Scanner
+            - name: 'Install Java'
+              uses: actions/setup-java@v2
+              with:
+                distribution: 'adopt'
+                java-version: '11'
 
-            # # Install SFDX scanner
-            # - name: 'Installing SFDX scanner'
-            #   run: sfdx plugins:install @salesforce/sfdx-scanner@latest
+            # Install SFDX scanner
+            - name: 'Installing SFDX scanner'
+              run: sfdx plugins:install @salesforce/sfdx-scanner@latest
 
-            # - name: 'Scan code - Doing in csv for debugging purpose'
-            #   run: |
-            #       sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --outfile 'apexScanResults.csv' --severity-threshold 2
+            - name: 'Scan code - Doing in csv for debugging purpose'
+              run: |
+                  sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --outfile 'apexScanResults.csv' --severity-threshold 2
 
-            # - name: 'Try to read the file - Debugging Purpose'
-            #   run: |
-            #       while IFS= read -r line; do
-            #           echo "$line"
-            #       done < apexScanResults.csv
+            - name: 'Try to read the file - Debugging Purpose'
+              run: |
+                  while IFS= read -r line; do
+                      echo "$line"
+                  done < apexScanResults.csv
 
-            # - name: 'Scan code - Doing to Display it on PR created'
-            #   run: |
-            #       sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif' --severity-threshold 2
+            - name: 'Scan code - Doing to Display it on PR created'
+              run: |
+                  sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif' --severity-threshold 2
                   
-            # # Now we upload the .sarif file and the plugin will check for any violations
-            # - name: 'Upload SARIF file on PR'
-            #   uses: github/codeql-action/upload-sarif@v3
-            #   with:
-            #     sarif_file: apexScanResults.sarif
+            # Now we upload the .sarif file and the plugin will check for any violations
+            - name: 'Upload SARIF file on PR'
+              uses: github/codeql-action/upload-sarif@v3
+              with:
+                sarif_file: apexScanResults.sarif
 
             - name: 'Parse TestCases present in build.xml'
               run: |
