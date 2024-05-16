@@ -47,25 +47,26 @@ jobs:
             - name: 'Installing SFDX scanner'
               run: sfdx plugins:install @salesforce/sfdx-scanner@latest
 
-            - name: 'Scan code - Doing in csv for debugging purpose'
-              run: |
-                  sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --outfile 'apexScanResults.csv'
-            - name: 'Try to read the file - Debugging Purpose'
-              run: |
-                  while IFS= read -r line; do
-                      echo "$line"
-                  done < apexScanResults.csv
-
             - name: 'Scan code - Doing to Display it on PR created'
               run: |
-                  sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif'
+                  sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.sarif'
                   
             # Now we upload the .sarif file and the plugin will check for any violations
             - name: 'Upload SARIF file on PR'
               uses: github/codeql-action/upload-sarif@v2
               with:
                 sarif_file: apexScanResults.sarif
+                category: error, warning
 
+            - name: 'Scan code - Doing in csv for debugging purpose'
+              run: |
+                  sfdx scanner:run --target './**/*.cls' --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
+            - name: 'Try to read the file - Debugging Purpose'
+              run: |
+                  while IFS= read -r line; do
+                      echo "$line"
+                  done < apexScanResults.csv
+            
             - name: 'Parse TestCases present in build.xml'
               run: |
                   node parse.js              
