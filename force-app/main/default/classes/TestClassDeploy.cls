@@ -6,6 +6,7 @@ public class TestClassDeploy{
     if(test == ''){
         //DO SOMETHING 
     }
+
 }
 public void test1(String t1) {
         Database.query('SELECT Id FROM Account' + t1);
