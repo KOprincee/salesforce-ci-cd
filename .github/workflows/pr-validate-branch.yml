@@ -16,18 +16,19 @@ jobs:
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
             # Checkout the source code
-            - name: 'Checkout source code to create Virtual Repository'
-              uses: actions/checkout@v3
+            - uses: actions/checkout@v3
               with:
-                fetch-depth: 0
-
-            - name: get changed files
-              id: getfile
+                  fetch-depth: 2
+            - name: Get changed files
+              id: changed-files
               run: |
-                  git diff --name-only ${{ github.base_ref}} ${{ github.sha }}
-            - name: echo output
+                  echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
+                 
+            - name: List changed files
               run: |
-                  git help diff-tree
+                  for file in ${{ steps.changed-files.outputs.changed_files }}; do
+                      echo "$file was changed"
+                  done
 
             # # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
             # - name: 'Set up Node.js'
