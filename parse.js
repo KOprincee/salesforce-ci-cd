@@ -14,7 +14,7 @@ async function extractTests() {
         return;
       }
 
-      // Extract the values of runTest tags
+      // Extract the values of runTest tag
       const runTests = result.TestSuite.runTest;
       runTestsString = runTests.join(", "); // Combine values into a single string
 
