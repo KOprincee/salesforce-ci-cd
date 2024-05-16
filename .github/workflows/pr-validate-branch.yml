@@ -87,7 +87,7 @@ jobs:
             - name: 'Validate changes present in package.xml - Run Tests'
               if: ${{ env.APEX_TESTS != '' }}
               run: |
-                  sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests env.APEX_TESTS --verbose --json
+                  sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --verbose --json
 
             - name: 'Deploy changes present in package.xml - No Tests specified'
               if: ${{ env.APEX_TESTS == '' }}
