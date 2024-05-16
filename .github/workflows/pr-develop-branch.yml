@@ -32,7 +32,7 @@ jobs:
             - name: 'Parse TestCases'
               run: |
                   node parse.js              
-                  echo "APEX_TESTS=$APEX_TESTS"
+                  echo $APEX_TESTS
                 
             # Install Salesforce CLI
             - name: 'Install Salesforce CLI'
