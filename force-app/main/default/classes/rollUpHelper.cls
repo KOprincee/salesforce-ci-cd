@@ -13,7 +13,7 @@ public class rollUpHelper{
         Set <Id> accId = new Set <Id>();
         for(Opportunity op : newOpp){
             accId.add(op.AccountId);
-        } 
+        }
         updateRollupFields(accId);
     }
     
