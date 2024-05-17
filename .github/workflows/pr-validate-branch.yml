@@ -92,7 +92,7 @@ jobs:
               if: ${{ env.APEX_TESTS != '' }}
               run: |
                   mkdir testResuts
-                  sfdx force:apex:test:run --class-names ${{ env.APEX_TESTS }} --code-coverage --synchronous --d ./testResults
+                  sfdx force:apex:test:run --class-names ${{ env.APEX_TESTS }} --code-coverage --synchronous --outputdir ./testResults
 
             # - name: 'Get TestRun ID and Fetch the Code Coverage'
             #   if: ${{ env.APEX_TESTS != '' && success() }}
