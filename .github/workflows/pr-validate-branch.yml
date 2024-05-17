@@ -103,6 +103,9 @@ jobs:
               run: |
                   if grep -qvx 'true' ./testResults/codeCoverageReadableFile.txt; then
                       exit 1
+                  else
+                      echo "All Classes have Code Coverage of more than 85%"
+                  fi
                    
             # Validate the changes and run the testCases if required
             # - name: 'Validate changes present in package.xml - Run Tests'
