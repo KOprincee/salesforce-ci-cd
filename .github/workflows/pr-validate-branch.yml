@@ -92,17 +92,17 @@ jobs:
               if: ${{ env.APEX_TESTS != '' }}
               run: |
                   mkdir testResuts
-                  sfdx force:apex:test:run --classnames "rollUpSummaryTest" --outputdir ./testResults
+                  sfdx force:apex:test:run --classnames ${{ env.APEX_TESTS }} --codecoverage --synchronous --outputdir ./testResults
 
-            - name: 'Get TestRun ID and Fetch the Code Coverage'
-              if: ${{ env.APEX_TESTS != '' && success() }}
-              run: |
-                  TEST_ID=$(cat ./testResults/test-run-id.txt)       
-                  echo "TEST_ID=$TEST_ID" >> $GITHUB_ENV
-                  sf apex get test --test-run-id ${{env.TEST_ID}} --code-coverage --json --outputdir ./testResults
+            # - name: 'Get TestRun ID and Fetch the Code Coverage'
+            #   if: ${{ env.APEX_TESTS != '' && success() }}
+            #   run: |
+            #       TEST_ID=$(cat ./testResults/test-run-id.txt)       
+            #       echo "TEST_ID=$TEST_ID" >> $GITHUB_ENV
+            #       sf apex get test --test-run-id ${{env.TEST_ID}} --code-coverage --json --outputdir ./testResults
 
             - name: 'Get the Code Coverage for Each of the Class'
-              if: ${{ env.APEX_TESTS != '' }}
+              if: ${{ env.APEX_TESTS != '' && success() }}
               run: |
                   node qualityGateCheck.js
                   QUALITY_CHECK=$(cat ./testResults/codeCoverageReadableFile.txt)
