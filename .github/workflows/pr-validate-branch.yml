@@ -111,8 +111,6 @@ jobs:
             - name: 'If the Code Coverage for any class is > 85% Exit'
               if: ${{ env.QUALITY_CHECK != 'true' }}
               run: |
-                  echo "Some Test Cases Failed Check below for more details:"
-                  echo ${{env.QUALITY_CHECK}}
                   exit 1
 
             # Validate the changes and run the testCases if required
