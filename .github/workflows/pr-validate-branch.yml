@@ -92,7 +92,7 @@ jobs:
               if: ${{ env.APEX_TESTS != '' }}
               run: |
                   mkdir testResuts
-                  sfdx force:apex:test:run --classnames "rollUpSummaryTest" --synchronous --outputdir ./testResults
+                  sfdx force:apex:test:run --classnames "rollUpSummaryTest" --outputdir ./testResults
 
             - name: 'Get TestRun ID and Fetch the Code Coverage'
               if: ${{ env.APEX_TESTS != '' }}
