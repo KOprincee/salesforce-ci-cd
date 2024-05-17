@@ -95,7 +95,7 @@ jobs:
                   sfdx force:apex:test:run --classnames "rollUpSummaryTest" --outputdir ./testResults
 
             - name: 'Get TestRun ID and Fetch the Code Coverage'
-              if: ${{ env.APEX_TESTS != '' }}
+              if: ${{ env.APEX_TESTS != '' && success() }}
               run: |
                   TEST_ID=$(cat ./testResults/test-run-id.txt)       
                   echo "TEST_ID=$TEST_ID" >> $GITHUB_ENV
