@@ -59,5 +59,6 @@ public class rollUpSummaryTest {
         System.assertEquals(1, checkAcNew[0].Total_Opportunities__c);
         System.assertEquals(10000, checkAcNew[0].Total_Revenue__c);
         System.assertEquals(1000, checkAcNew[0].Average_Revenue__c);
+
     }
 }
