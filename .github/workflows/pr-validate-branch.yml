@@ -86,19 +86,26 @@ jobs:
             # Authenticate to org
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+
+            # Deploying the Changes
+            - name: 'Deploy changes present in package.xml'
+              run: |
+                  sfdx force:source:deploy --manifest package.xml --verbose
               
-            #Check if we have TestClasses to be ran.
+            # Check if we have TestClasses to be ran.
             - name: 'Run Apex Test Classes - If Any'
               if: ${{ env.APEX_TESTS != '' }}
               run: |
                   mkdir testResuts
                   sfdx force:apex:test:run --class-names ${{ env.APEX_TESTS }} --code-coverage --synchronous --outputdir ./testResults
 
+            # Get the Code Coverage for the Above Test Clases
             - name: 'Get the Code Coverage for Each of the Class'
               if: ${{ env.APEX_TESTS != '' && success() }}
               run: |
                   node qualityGateCheck.js
 
+            # Fail the PR if the Code Coverage is Less than 85
             - name: 'If the Code Coverage for any class is > 85% Exit'
               run: |
                   if grep -qvx 'true' ./testResults/codeCoverageReadableFile.txt; then
@@ -112,8 +119,4 @@ jobs:
             #   if: ${{ env.APEX_TESTS != '' }}
             #   run: |
             #       sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --verbose
-
-            - name: 'Deploy changes present in package.xml - No Tests specified'
-              run: |
-                  sfdx force:source:deploy --manifest package.xml --checkonly --verbose
                   
