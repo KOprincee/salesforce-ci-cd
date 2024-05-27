@@ -40,12 +40,12 @@ jobs:
               with:
                 sfdx-version: 'latest'
 
-            # Install java as it is required for Salesforce Scanner
-            - name: 'Install Java'
-              uses: actions/setup-java@v2
-              with:
-                distribution: 'adopt'
-                java-version: '11'
+            # # Install java as it is required for Salesforce Scanner
+            # - name: 'Install Java'
+            #   uses: actions/setup-java@v2
+            #   with:
+            #     distribution: 'adopt'
+            #     java-version: '11'
 
             # # Install SFDX scanner
             # - name: 'Installing SFDX scanner'
@@ -92,37 +92,28 @@ jobs:
               if: ${{ env.APEX_TESTS != '' }}
               run: |
                   mkdir testResuts
-                  sfdx force:apex:test:run --classnames ${{ env.APEX_TESTS }} --codecoverage --synchronous --outputdir ./testResults
-
-            # - name: 'Get TestRun ID and Fetch the Code Coverage'
-            #   if: ${{ env.APEX_TESTS != '' && success() }}
-            #   run: |
-            #       TEST_ID=$(cat ./testResults/test-run-id.txt)       
-            #       echo "TEST_ID=$TEST_ID" >> $GITHUB_ENV
-            #       sf apex get test --test-run-id ${{env.TEST_ID}} --code-coverage --json --outputdir ./testResults
+                  sfdx force:apex:test:run --class-names ${{ env.APEX_TESTS }} --code-coverage --synchronous --outputdir ./testResults
 
             - name: 'Get the Code Coverage for Each of the Class'
               if: ${{ env.APEX_TESTS != '' && success() }}
               run: |
                   node qualityGateCheck.js
-                  QUALITY_CHECK=$(cat ./testResults/codeCoverageReadableFile.txt)
-                  echo "QUALITY_CHECK=$QUALITY_CHECK" >> $GITHUB_ENV
 
             - name: 'If the Code Coverage for any class is > 85% Exit'
-              if: ${{ env.QUALITY_CHECK != 'true' }}
               run: |
-                  echo "Some Test Cases Failed Check below for more details:"
-                  echo ${{env.QUALITY_CHECK}}
-                  exit 1
-
+                  if grep -qvx 'true' ./testResults/codeCoverageReadableFile.txt; then
+                      exit 1
+                  else
+                      echo "All Classes have Code Coverage of more than 85%"
+                  fi
+                   
             # Validate the changes and run the testCases if required
             # - name: 'Validate changes present in package.xml - Run Tests'
             #   if: ${{ env.APEX_TESTS != '' }}
             #   run: |
             #       sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --verbose
 
-            # - name: 'Deploy changes present in package.xml - No Tests specified'
-            #   if: ${{ env.APEX_TESTS == '' }}
-            #   run: |
-            #       sfdx force:source:deploy --manifest package.xml --checkonly --verbose
+            - name: 'Deploy changes present in package.xml - No Tests specified'
+              run: |
+                  sfdx force:source:deploy --manifest package.xml --checkonly --verbose
                   
