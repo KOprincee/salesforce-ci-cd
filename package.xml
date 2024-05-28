@@ -3,8 +3,7 @@
     <types>
         <members>rollUpHelper</members>
         <members>rollUpSummaryTest</members>
-        <members>rollUpHelper</members>
-        <members>rollUpSummaryTest</members>
+        <members>CICDdemoClass1</members>
         <name>ApexClass</name>
     </types>
     <types>
