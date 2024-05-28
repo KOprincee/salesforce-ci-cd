@@ -3,6 +3,8 @@
     <types>
         <members>rollUpHelper</members>
         <members>rollUpSummaryTest</members>
+        <members>rollUpHelper</members>
+        <members>rollUpSummaryTest</members>
         <name>ApexClass</name>
     </types>
     <types>
