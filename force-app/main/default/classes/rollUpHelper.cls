@@ -12,6 +12,7 @@ public class rollUpHelper{
             accId.add(op.AccountId);
         }
         updateRollupFields(accId);
+
         system.debug(accId);
     }
     
