@@ -1,59 +1,84 @@
 const fs = require("fs");
+const outputFilePath = "./testResults/codeCoverageReadableFile.txt";
+const xml2js = require("xml2js");
 
-// Path to the text file that contains the JSON file name
-const filenamePath = "./test-run-id.txt";
+filename = "./testResults/test-result.json";
 
-// Path to the output text file where the result will be stored
-const outputFilePath = "./codeCoverageReadableFile.txt";
-
-fs.readFile(filenamePath, "utf8", (err, filename) => {
+// Read the JSON file
+fs.readFile(filename, "utf8", (err, data) => {
   if (err) {
-    console.error("Error reading the filename file:", err);
+    console.error("Error reading the JSON file:", err);
     return;
   }
 
-  // Remove any trailing newlines or spaces
-  filename = "test-result-" + filename.trim() + ".json";
+  try {
+    // Parse the JSON data
+    const jsonData = JSON.parse(data);
 
-  // Read the JSON file
-  fs.readFile(filename, "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading the JSON file:", err);
-      return;
-    }
+    // Extract coveredPercent values from coverage.coverage array
+    const coveredPercents = jsonData.coverage.coverage.map(
+      (item) => item.coveredPercent + ";" + item.name,
+    );
 
-    try {
-      // Parse the JSON data
-      const jsonData = JSON.parse(data);
-
-      // Extract coveredPercent values from coverage.coverage array
-      const coveredPercents = jsonData.coverage.coverage.map(
-        (item) => item.coveredPercent + ";" + item.name,
-      );
-
-      let result = "";
-      for (const item of coveredPercents) {
-        const [percentageStr, className] = item.split(";");
-        const percentage = parseInt(percentageStr, 10);
-        if (percentage < 85) {
-          result += `Test Class ${className} has test coverage of ${percentage} which is less than specified Quality Gate.\n`;
-        }
+    // Read the package.xml to verify which class or trigger is present in the current branch
+    fs.readFile(__dirname + "/package.xml", (err, data) => {
+      if (err) {
+        console.error("Error reading XML file:", err);
+        return;
       }
-
-      if (result.indexOf("Test Class") == -1) {
-        result = "true";
-      }
-
-      // Write the result to the output file
-      fs.writeFile(outputFilePath, result.trim(), "utf8", (err) => {
+      // Parse the XML data
+      xml2js.parseString(data, (err, result) => {
         if (err) {
-          console.error("Error writing the result to the file:", err);
-        } else {
-          console.log(result.trim());
+          console.error("Error parsing XML:", err);
+          return;
         }
+
+        let classToCheckCodeCoverage = "";
+        let apexClasses = result.Package.types;
+        const regex = /test/i;
+        for (let value of apexClasses) {
+          if (value.name == "ApexClass" || value.name == "ApexTrigger") {
+            let classNames = value.members;
+            for (let name of classNames) {
+              if (!regex.test(name)) {
+                classToCheckCodeCoverage += name + ";";
+              }
+            }
+          }
+        }
+
+        let qualityCheckResult = "";
+        for (const item of coveredPercents) {
+          const [percentageStr, className] = item.split(";");
+          const percentage = parseInt(percentageStr);
+          if (
+            percentage < 85 &&
+            classToCheckCodeCoverage.indexOf(className) != -1
+          ) {
+            qualityCheckResult += `Test Class ${className} has test coverage of ${percentage}% which is less than specified Quality Gate.\n`;
+          }
+        }
+
+        if (qualityCheckResult.indexOf("Test Class") == -1) {
+          qualityCheckResult = "true";
+        }
+
+        // Write the result to the output file
+        fs.writeFile(
+          outputFilePath,
+          qualityCheckResult.trim(),
+          "utf8",
+          (err) => {
+            if (err) {
+              console.error("Error writing the result to the file:", err);
+            } else {
+              console.log(qualityCheckResult.trim());
+            }
+          },
+        );
       });
-    } catch (parseErr) {
-      console.error("Error parsing JSON data:", parseErr);
-    }
-  });
+    });
+  } catch (parseErr) {
+    console.error("Error parsing JSON data:", parseErr);
+  }
 });
