@@ -4,7 +4,7 @@ public class TestClassDeploy{
     System.debug('test scanner');  
     String test = '';
     if(test == ''){
-         //DO SOMETHINGA
+         //DO SOMETHING
     } 
 }
 public void test1(String t1) {
