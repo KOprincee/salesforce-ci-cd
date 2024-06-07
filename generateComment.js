@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 const inputFile = "apexScanResults.csv"; // Replace with your actual input file name
-const outputFile = "violations.csv";
+const outputFile = "violations.txt";
 
 // Function to format violation message
 function formatViolation(data) {
@@ -31,7 +31,7 @@ fs.readFile(inputFile, "utf8", (err, data) => {
 
   let formattedData = "";
   if (violations.length > 0) {
-    const formattedData = "> [!WARNING]\n" + violations.join("\n");
+    formattedData = "> [!WARNING]\n" + violations.join("\n");
   }
 
   fs.writeFile(outputFile, formattedData, (err) => {
