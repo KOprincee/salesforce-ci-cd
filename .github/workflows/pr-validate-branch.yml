@@ -21,19 +21,15 @@ jobs:
               with:
                   fetch-depth: 0
 
-            - uses: actions/github-script@v5
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
+            - uses: actions/github-script@v6
+              with: 
                   script: |
-                      const { owner, repo } = context.repo;
-                      const prNumber = context.issue.number;
-                      const comment = '👋 Thanks for reporting!';
-                      github.issues.createComment({
-                        owner,
-                        repo,
-                        issue_number: prNumber,
-                        body: comment
-                      });
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: '👋 Thanks for reporting!'
+                      })
 
             # - name: 'Add Comment'
             #   env: 
