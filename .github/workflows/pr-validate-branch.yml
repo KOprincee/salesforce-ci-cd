@@ -74,18 +74,15 @@ jobs:
             - name: 'Generate the comment to be added'
               run: |
                   node generateComment.js
-                  COMMENTS=$(cat violations.txt)
-                  echo "PR_COMMENT=$COMMENTS" >> $GITHUB_ENV
 
             - uses: actions/github-script@v6
-              if: ${{ env.PR_COMMENT != '' }}
               with: 
                   script: |
                       github.rest.issues.createComment({
                         issue_number: context.issue.number,
                         owner: context.repo.owner,
                         repo: context.repo.repo,
-                        body: ${{ env.PR_COMMENT }}
+                        body: $(cat violations.txt)
                       })
             
             - name: 'Parse TestCases present in build.xml'
@@ -136,4 +133,5 @@ jobs:
             #   if: ${{ env.APEX_TESTS != '' }}
             #   run: |
             #       sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --verbose
-                  
+                                    # COMMENTS=$(cat violations.txt)
+                  # echo "PR_COMMENT=$COMMENTS" >> $GITHUB_ENV
