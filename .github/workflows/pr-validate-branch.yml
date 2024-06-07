@@ -78,18 +78,14 @@ jobs:
                   node generateComment.js
 
             - name: 'Read the Comment Files'
-            #  id: read-file
+              id: read-file
               run: |
-                  export FILE_CONTENT=$(cat violations.txt)
-
-            - name: 'Test'
-              run: |
-                  echo "$FILE_CONTENT"
+                  echo "file_content=$(cat violations.csv)" >> $GITHUB_OUTPUT
 
             - uses: actions/github-script@v6
               with: 
                   script: |
-                      const COMMENTS = `${{ steps.read-file.outputs.stdout }}`;
+                      const COMMENTS = `${{ steps.read-file.outputs.file_content }}`;
                       github.rest.issues.createComment({
                         issue_number: context.issue.number,
                         owner: context.repo.owner,
