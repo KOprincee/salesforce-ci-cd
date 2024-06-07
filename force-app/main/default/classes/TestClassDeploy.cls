@@ -3,6 +3,7 @@ public class TestClassDeploy{
     //Helxlo World
     System.debug('test scanner');  
     String test = '';
+String abc = '';
     if(test == ''){
          //DO SOMETHING
     } 
