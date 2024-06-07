@@ -14,8 +14,6 @@ jobs:
     validate-changes-on-QA-org:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
-        env:
-            FILE_CONTENT: ""
         steps:
                       
             # Checkout the source code
