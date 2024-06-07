@@ -29,7 +29,10 @@ fs.readFile(inputFile, "utf8", (err, data) => {
     return formatViolation(violationData);
   });
 
-  const formattedData = "> [!WARNING]\n" + violations.join("\n");
+  let formattedData = "";
+  if (violations.length > 0) {
+    const formattedData = "> [!WARNING]\n" + violations.join("\n");
+  }
 
   fs.writeFile(outputFile, formattedData, (err) => {
     if (err) {
