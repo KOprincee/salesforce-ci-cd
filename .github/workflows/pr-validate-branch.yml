@@ -21,29 +21,31 @@ jobs:
               with:
                   fetch-depth: 0
 
-            # - uses: actions/github-script@v5
-            #   with:
-            #       github-token: ${{ secrets.GITHUB_TOKEN }}
-            #       script: |
-            #           const response = await github.pull_request.createComment({
-            #             owner: context.repo.owner,
-            #             repo: context.repo.repo,
-            #             issue_number: context.pull_request.number,
-            #             body: 'Testing Commetns from PR'
-            #           });
-            #           console.log(response);
+            - uses: actions/github-script@v5
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      const { owner, repo } = context.repo;
+                      const prNumber = context.issue.number;
+                      const comment = '👋 Thanks for reporting!';
+                      github.issues.createComment({
+                        owner,
+                        repo,
+                        issue_number: prNumber,
+                        body: comment
+                      });
 
-            - name: 'Add Comment'
-              env: 
-                  URL: ${{ github.event.pull_request.comments_url }}
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: |
-                  curl \
-                  -X POST \
-                   $URL \
-                   -H "Content-Type: application/json" \
-                   -H "Authorization: token $GITHUB_TOKEN" \
-                   --data '{ "body": "blah blah" }'
+            # - name: 'Add Comment'
+            #   env: 
+            #       URL: ${{ github.event.pull_request.comments_url }}
+            #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #   run: |
+            #       curl \
+            #       -X POST \
+            #        $URL \
+            #        -H "Content-Type: application/json" \
+            #        -H "Authorization: token $GITHUB_TOKEN" \
+            #        --data '{ "body": "blah blah" }'
                   
             # - name: Get changed files
             #   id: changed-files
