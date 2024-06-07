@@ -7,6 +7,8 @@ public class rollUpSummaryTest {
 
         Account acc = new Account (Name = 'TestAccount');
         insert acc;
+
+
     
         List <Opportunity> newOp = new List <Opportunity>();
         for(Integer i = 0; i< 5; i++){
