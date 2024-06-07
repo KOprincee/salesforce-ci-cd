@@ -17,8 +17,6 @@ fs.readFile(inputFile, "utf8", (err, data) => {
   const lines = data.split("\n").filter((element) => element);
   const headers = lines[0].split(",");
 
-  console.log(lines);
-
   const violations = lines.slice(1).map((line) => {
     const rowData = line.split(",");
     const violationData = {};
@@ -26,7 +24,10 @@ fs.readFile(inputFile, "utf8", (err, data) => {
     headers.forEach((header, index) => {
       violationData[header.trim()] = rowData[index];
     });
-    return formatViolation(violationData);
+
+    console.log(violationData);
+
+    return formatViolation(violationData.filter((element) => element));
   });
 
   let formattedData = "";
