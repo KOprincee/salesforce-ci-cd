@@ -1,6 +1,6 @@
 public class TestClassDeploy{
   public static void testMethods(){
-    //Hello Worlds
+    //Hello World
     System.debug('test scanner');  
     String test = '';
     if(test == ''){  
