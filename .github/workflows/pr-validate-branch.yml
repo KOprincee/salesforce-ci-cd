@@ -53,7 +53,7 @@ jobs:
 
             - name: 'Scan code - Doing to Display it on PR created'
               run: |
-                  sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif'
+                  sfdx scanner:run --target './**/*.cls' --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif'
                   
             # Now we upload the .sarif file and the plugin will check for any violations
             - name: 'Upload SARIF file on PR'
