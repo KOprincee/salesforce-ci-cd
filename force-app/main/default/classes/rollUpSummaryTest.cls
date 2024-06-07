@@ -23,6 +23,7 @@ public class rollUpSummaryTest {
 
         }
         insert newOp;
+
     }
 
     
