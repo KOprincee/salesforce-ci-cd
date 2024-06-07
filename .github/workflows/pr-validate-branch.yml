@@ -14,6 +14,8 @@ jobs:
     validate-changes-on-QA-org:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
+        env:
+            FILE_CONTENT: ""
         steps:
                       
             # Checkout the source code
@@ -76,13 +78,13 @@ jobs:
                   node generateComment.js
 
             - name: 'Read the Comment Files'
-              id: read-file
+            #  id: read-file
               run: |
-                  echo "file_content=$(cat violations.txt)" >> $GITHUB_OUTPUT
+                  export FILE_CONTENT=$(cat violations.txt)
 
             - name: 'Test'
               run: |
-                  echo "${{ steps.read-file.outputs.file_content }}"
+                  echo "$FILE_CONTENT"
 
             - uses: actions/github-script@v6
               with: 
