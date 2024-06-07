@@ -80,7 +80,7 @@ jobs:
             - name: 'Read the Comment Files'
               id: read-file
               run: |
-                  echo "file_content=$(cat violations.csv)" >> $GITHUB_OUTPUT
+                  echo "file_content=$(cat violations.txt)" >> $GITHUB_OUTPUT
 
             - uses: actions/github-script@v6
               with: 
