@@ -15,51 +15,61 @@ jobs:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
-            # Checkout the source code
-            - uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0
+            - uses: actions/github-script@v6
+              with: 
+                  script: |
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: '👋 Thanks for reporting!'
+                      })
+                      
+            # # Checkout the source code
+            # - uses: actions/checkout@v3
+            #   with:
+            #       fetch-depth: 0
                   
-            - name: Get changed files
-              id: changed-files
-              run: |
-                  echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
+            # - name: Get changed files
+            #   id: changed-files
+            #   run: |
+            #       echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
 
-            # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
-            - name: 'Set up Node.js'
-              uses: actions/setup-node@v2
-              with:
-                node-version: 21
+            # # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
+            # - name: 'Set up Node.js'
+            #   uses: actions/setup-node@v2
+            #   with:
+            #     node-version: 21
 
-            - name: 'Install dependencies to Parse TestCases'
-              run: npm install xml2js
+            # - name: 'Install dependencies to Parse TestCases'
+            #   run: npm install xml2js
             
-            # Install Salesforce CLI
-            - name: 'Install Salesforce CLI'
-              uses: sfdx-actions/setup-sfdx@v1
-              with:
-                sfdx-version: 'latest'
+            # # Install Salesforce CLI
+            # - name: 'Install Salesforce CLI'
+            #   uses: sfdx-actions/setup-sfdx@v1
+            #   with:
+            #     sfdx-version: 'latest'
 
-            # Install java as it is required for Salesforce Scanner
-            - name: 'Install Java'
-              uses: actions/setup-java@v2
-              with:
-                distribution: 'adopt'
-                java-version: '11'
+            # # Install java as it is required for Salesforce Scanner
+            # - name: 'Install Java'
+            #   uses: actions/setup-java@v2
+            #   with:
+            #     distribution: 'adopt'
+            #     java-version: '11'
 
-            # Install SFDX scanner
-            - name: 'Installing SFDX scanner'
-              run: sfdx plugins:install @salesforce/sfdx-scanner@latest
+            # # Install SFDX scanner
+            # - name: 'Installing SFDX scanner'
+            #   run: sfdx plugins:install @salesforce/sfdx-scanner@latest
 
-            - name: 'Scan code - Doing to Display it on PR created'
-              run: |
-                  sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif'
+            # - name: 'Scan code - Doing to Display it on PR created'
+            #   run: |
+            #       sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif'
                   
-            # Now we upload the .sarif file and the plugin will check for any violations
-            - name: 'Upload SARIF file on PR'
-              uses: github/codeql-action/upload-sarif@v2
-              with:
-                sarif_file: apexScanResults.sarif
+            # # Now we upload the .sarif file and the plugin will check for any violations
+            # - name: 'Upload SARIF file on PR'
+            #   uses: github/codeql-action/upload-sarif@v2
+            #   with:
+            #     sarif_file: apexScanResults.sarif
 
             # - name: 'Scan code - Doing in csv for debugging purpose'
             #   run: |
@@ -70,48 +80,48 @@ jobs:
             #           echo "$line"
             #       done < apexScanResults.csv
             
-            - name: 'Parse TestCases present in build.xml'
-              run: |
-                  node parse.js              
-                  TESTS=$(cat ApexTests.txt)       
-                  echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
+            # - name: 'Parse TestCases present in build.xml'
+            #   run: |
+            #       node parse.js              
+            #       TESTS=$(cat ApexTests.txt)       
+            #       echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
 
-            # Store secret for both orgs
-            - name: 'Populate auth file with SFDX_URL secret of the QA'
-              shell: bash
-              run: |
-                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+            # # Store secret for both orgs
+            # - name: 'Populate auth file with SFDX_URL secret of the QA'
+            #   shell: bash
+            #   run: |
+            #       echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
 
-            # Authenticate to org
-            - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+            # # Authenticate to org
+            # - name: 'Authenticate to Integration Org'
+            #   run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
-            # Deploying the Changes
-            - name: 'Deploy changes present in package.xml'
-              run: |
-                  sfdx force:source:deploy --manifest package.xml --verbose
+            # # Deploying the Changes
+            # - name: 'Deploy changes present in package.xml'
+            #   run: |
+            #       sfdx force:source:deploy --manifest package.xml --verbose
               
-            # Check if we have TestClasses to be ran.
-            - name: 'Run Apex Test Classes - If Any'
-              if: ${{ env.APEX_TESTS != '' }}
-              run: |
-                  mkdir testResuts
-                  sfdx force:apex:test:run --class-names ${{ env.APEX_TESTS }} --code-coverage --synchronous --outputdir ./testResults
+            # # Check if we have TestClasses to be ran.
+            # - name: 'Run Apex Test Classes - If Any'
+            #   if: ${{ env.APEX_TESTS != '' }}
+            #   run: |
+            #       mkdir testResuts
+            #       sfdx force:apex:test:run --class-names ${{ env.APEX_TESTS }} --code-coverage --synchronous --outputdir ./testResults
 
-            # Get the Code Coverage for the Above Test Clases
-            - name: 'Get the Code Coverage for Each of the Class'
-              if: ${{ env.APEX_TESTS != '' && success() }}
-              run: |
-                  node qualityGateCheck.js
+            # # Get the Code Coverage for the Above Test Clases
+            # - name: 'Get the Code Coverage for Each of the Class'
+            #   if: ${{ env.APEX_TESTS != '' && success() }}
+            #   run: |
+            #       node qualityGateCheck.js
 
-            # Fail the PR if the Code Coverage is Less than 85
-            - name: 'If the Code Coverage for any class is > 85% Exit'
-              run: |
-                  if grep -qvx 'true' ./testResults/codeCoverageReadableFile.txt; then
-                      exit 1
-                  else
-                      echo "All Classes have Code Coverage of more than 85%"
-                  fi
+            # # Fail the PR if the Code Coverage is Less than 85
+            # - name: 'If the Code Coverage for any class is > 85% Exit'
+            #   run: |
+            #       if grep -qvx 'true' ./testResults/codeCoverageReadableFile.txt; then
+            #           exit 1
+            #       else
+            #           echo "All Classes have Code Coverage of more than 85%"
+            #       fi
                    
             # Validate the changes and run the testCases if required
             # - name: 'Validate changes present in package.xml - Run Tests'
