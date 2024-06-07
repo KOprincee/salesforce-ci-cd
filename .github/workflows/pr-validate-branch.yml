@@ -17,11 +17,15 @@ jobs:
         steps:
                       
             # Checkout the source code
-            - name: 'Checkout the commited Repository'
             - uses: actions/checkout@v3
               with:
                   fetch-depth: 0
                   
+            - name: Get changed files
+              id: changed-files
+              run: |
+                  echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
+
             # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
             - name: 'Set up Node.js'
               uses: actions/setup-node@v2
@@ -58,16 +62,9 @@ jobs:
             #   with:
             #     sarif_file: apexScanResults.sarif
 
-            
-            - name: 'Get changed files for Scanning'
-              id: changed-files
-              run: |
-                  echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
-
-            - name: 'Scan code - If Any Changes Made'
+            - name: 'Scan code - Doing in csv for debugging purpose'
               run: |
                   sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --category "Design,Best Practices,Performance,Error Prone,Security" --normalize-severity --outfile 'apexScanResults.csv'
-            
             - name: 'Try to read the file - Debugging Purpose'
               run: |
                   while IFS= read -r line; do
