@@ -78,11 +78,11 @@ jobs:
             - name: 'Read the Comment Files'
               id: read-file
               run: |
-                  echo "$(cat violations.txt)"
+                  echo "file_content=$(cat violations.txt)" >> $GITHUB_OUTPUT
 
             - name: 'Test'
               run: |
-                  echo "${{ steps.read-file.outputs.stdout }}"
+                  echo "${{ steps.read-file.outputs.file_content }}"
 
             - uses: actions/github-script@v6
               with: 
