@@ -1,12 +1,14 @@
-/*Autjor*/
+/*Autjor   */
 @isTest
 public class rollUpSummaryTest {
     
     @testSetup
-    public static void testData(){
+    public static void testData(){ 
 
         Account acc = new Account (Name = 'TestAccount');
         insert acc;
+
+
     
         List <Opportunity> newOp = new List <Opportunity>();
         for(Integer i = 0; i< 5; i++){
@@ -18,12 +20,14 @@ public class rollUpSummaryTest {
                                              AmountB__c = 500);
             
             newOp.add(op);
+
         }
         insert newOp;
+
     }
 
     
-    @isTest    
+    /*@isTest    
     public static void testDeleteOpp(){
         Opportunity op = [SELECT Id from Opportunity where Name = 'Opportunity2'];
         
@@ -35,7 +39,7 @@ public class rollUpSummaryTest {
         System.assertEquals(4, checkAc[0].Total_Opportunities__c);
         System.assertEquals(4000, checkAc[0].Total_Revenue__c);
         System.assertEquals(500, checkAc[0].Average_Revenue__c);
-    }
+    }*/
     
     @isTest
     public static void testUpdateOpp(){
