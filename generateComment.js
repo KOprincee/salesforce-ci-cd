@@ -17,26 +17,28 @@ fs.readFile(inputFile, "utf8", (err, data) => {
   const lines = data.split("\n");
   const headers = lines[0].split(",");
 
-  const violations = lines.slice(1).map((line) => {
-    const rowData = line.split(",");
-    const violationData = {};
+  console.log(lines);
 
-    headers.forEach((header, index) => {
-      violationData[header.trim()] = rowData[index];
-    });
-    return formatViolation(violationData);
-  });
+  // const violations = lines.slice(1).map((line) => {
+  //   const rowData = line.split(",");
+  //   const violationData = {};
 
-  let formattedData = "";
-  if (violations.length > 0) {
-    formattedData = "> [!WARNING]\n" + violations.join("\n");
-  }
+  //   headers.forEach((header, index) => {
+  //     violationData[header.trim()] = rowData[index];
+  //   });
+  //   return formatViolation(violationData);
+  // });
 
-  fs.writeFile(outputFile, formattedData, (err) => {
-    if (err) {
-      console.error("Error writing to file:", err);
-      return;
-    }
-    console.log("Violation report generated successfully:", outputFile);
-  });
+  // let formattedData = "";
+  // if (violations.length > 0) {
+  //   formattedData = "> [!WARNING]\n" + violations.join("\n");
+  // }
+
+  // fs.writeFile(outputFile, formattedData, (err) => {
+  //   if (err) {
+  //     console.error("Error writing to file:", err);
+  //     return;
+  //   }
+  //   console.log("Violation report generated successfully:", outputFile);
+  // });
 });
