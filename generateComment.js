@@ -35,6 +35,8 @@ fs.readFile(inputFile, "utf8", (err, data) => {
     formattedData = "> [!WARNING]\n" + violations.join("\n");
   }
 
+  console.log(formattedData);
+
   fs.writeFile(outputFile, formattedData, (err) => {
     if (err) {
       console.error("Error writing to file:", err);
