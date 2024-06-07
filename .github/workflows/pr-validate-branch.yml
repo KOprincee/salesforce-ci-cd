@@ -74,7 +74,7 @@ jobs:
 
             - name: 'Scan code - Doing in csv for debugging purpose'
               run: |
-                  sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
+                  sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --category "Design,Best Practices,Performance,Error Prone,Security" --normalize-severity --outfile 'apexScanResults.csv'
             - name: 'Try to read the file - Debugging Purpose'
               run: |
                   while IFS= read -r line; do
