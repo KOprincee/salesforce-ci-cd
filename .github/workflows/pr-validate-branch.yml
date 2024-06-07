@@ -15,14 +15,18 @@ jobs:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
-            - uses: actions/github-script@v6
-              with: 
+            - uses: actions/github-script@v5
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
                   script: |
-                      github.rest.issues.createComment({
-                        issue_number: context.issue.number,
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        body: '👋 Thanks for reporting!'
+                      const { owner, repo } = context.repo;
+                      const prNumber = context.issue.number;
+                      const comment = '👋 Thanks for reporting!';
+                      github.issues.createComment({
+                        owner,
+                        repo,
+                        issue_number: prNumber,
+                        body: comment
                       })
                       
             # # Checkout the source code
