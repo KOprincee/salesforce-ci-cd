@@ -78,12 +78,12 @@ jobs:
             - name: 'Read the Comment Files'
               id: read-file
               run: |
-                  echo "file_content=$(cat violations.txt)" >> $GITHUB_OUTPUT"
+                  echo "$(cat violations.txt)"
 
             - uses: actions/github-script@v6
               with: 
                   script: |
-                      const COMMENTS= `${{ steps.read-file.outputs.file_content }}`;
+                      const COMMENTS= `${{ steps.read-file.outputs.stdout }}`;
                       github.rest.issues.createComment({
                         issue_number: context.issue.number,
                         owner: context.repo.owner,
