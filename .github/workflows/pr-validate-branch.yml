@@ -80,10 +80,14 @@ jobs:
               run: |
                   echo "$(cat violations.txt)"
 
+            - name: 'Test'
+              run: |
+                  echo "${{ steps.read-file.outputs.stdout }}"
+
             - uses: actions/github-script@v6
               with: 
                   script: |
-                      const COMMENTS= `${{ steps.read-file.outputs.stdout }}`;
+                      const COMMENTS = `${{ steps.read-file.outputs.stdout }}`;
                       github.rest.issues.createComment({
                         issue_number: context.issue.number,
                         owner: context.repo.owner,
