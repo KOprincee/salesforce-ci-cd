@@ -3,7 +3,7 @@ const fs = require("fs");
 const inputFile = "apexScanResults.csv"; // Replace with your actual input file name
 const outputFile = "violations.txt";
 
-// Function to format violation message
+// Function to format violation messages
 function formatViolation(data) {
   return `> ${data.Problem}. **${data.File.split("/").pop()}** violates rule *${data.Rule}* on Line ${data.Line}, Column ${data.Column}`;
 }
