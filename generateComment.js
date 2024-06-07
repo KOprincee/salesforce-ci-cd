@@ -5,7 +5,7 @@ const outputFile = "violations.txt";
 
 // Function to format violation messages
 function formatViolation(data) {
-  return `> ${data.Problem}. **${data.File.split("/").pop()}** violates rule *${data.Rule}* on Line ${data.Line}, Column ${data.Column}`;
+  return `${data.Problem}. **${data.File.split("/").pop()}** violates rule *${data.Rule}* on Line ${data.Line}, Column ${data.Column}`;
 }
 
 fs.readFile(inputFile, "utf8", (err, data) => {
