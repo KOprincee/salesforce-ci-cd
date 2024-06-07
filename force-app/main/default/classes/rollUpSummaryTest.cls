@@ -3,7 +3,7 @@
 public class rollUpSummaryTest {
     
     @testSetup
-    public static void testData(){
+    public static void testData(){ 
 
         Account acc = new Account (Name = 'TestAccount');
         insert acc;
