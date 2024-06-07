@@ -27,7 +27,6 @@ fs.readFile(inputFile, "utf8", (err, data) => {
         .split('"')[1];
     });
 
-    console.log(violationData);
     return formatViolation(violationData);
   });
 
