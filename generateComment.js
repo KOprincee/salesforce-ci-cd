@@ -22,12 +22,13 @@ fs.readFile(inputFile, "utf8", (err, data) => {
     const violationData = {};
 
     headers.forEach((header, index) => {
-      violationData[header.trim()] = rowData[index];
+      violationData[header.trim().split('"')[1]] = rowData[index]
+        .trim()
+        .split('"')[1];
     });
 
     console.log(violationData);
-
-    return formatViolation(violationData.filter((element) => element));
+    return formatViolation(violationData);
   });
 
   let formattedData = "";
