@@ -14,7 +14,7 @@ fs.readFile(inputFile, "utf8", (err, data) => {
     return;
   }
 
-  const lines = data.split("\n")filter((element) => element);
+  const lines = data.split("\n").filter((element) => element);
   const headers = lines[0].split(",");
 
   console.log(lines);
