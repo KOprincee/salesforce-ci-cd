@@ -78,7 +78,7 @@ jobs:
             - name: 'Read the Comment Files'
               id: read-file
               run: |
-                  echo "::set-output name=file_content::$(cat violations.txt)"
+                  echo "file_content=$(cat violations.txt)" >> $GITHUB_OUTPUT"
 
             - uses: actions/github-script@v6
               with: 
