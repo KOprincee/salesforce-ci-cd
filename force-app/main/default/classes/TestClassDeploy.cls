@@ -4,6 +4,7 @@ public class TestClassDeploy{
     System.debug('test scanner');  
     String test = '';
 String abc = '';
+String xyz = '';
     if(test == ''){
          //DO SOMETHING
     } 
