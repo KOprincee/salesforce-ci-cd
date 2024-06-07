@@ -20,6 +20,7 @@ public class rollUpSummaryTest {
                                              AmountB__c = 500);
             
             newOp.add(op);
+
         }
         insert newOp;
     }
