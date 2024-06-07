@@ -15,22 +15,35 @@ jobs:
         runs-on: ubuntu-latest
         if: ${{ github.actor != 'dependabot[bot]' }}
         steps:
-            - uses: actions/github-script@v5
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  script: |
-                      const response = await github.pull_request.createComment({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        issue_number: context.pull_request.number,
-                        body: 'Testing Commetns from PR'
-                      });
-                      console.log(response);
                       
-            # # Checkout the source code
-            # - uses: actions/checkout@v3
+            # Checkout the source code
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+
+            # - uses: actions/github-script@v5
             #   with:
-            #       fetch-depth: 0
+            #       github-token: ${{ secrets.GITHUB_TOKEN }}
+            #       script: |
+            #           const response = await github.pull_request.createComment({
+            #             owner: context.repo.owner,
+            #             repo: context.repo.repo,
+            #             issue_number: context.pull_request.number,
+            #             body: 'Testing Commetns from PR'
+            #           });
+            #           console.log(response);
+
+            - name: 'Add Comment'
+              env: 
+                  URL: ${{ github.event.issue.comments_url }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  curl \
+                  -X POST \
+                   $URL \
+                   -H "Content-Type: application/json" \
+                   -H "Authorization: token $GITHUB_TOKEN" \
+                   --data '{ "body": "blah blah" }'
                   
             # - name: Get changed files
             #   id: changed-files
