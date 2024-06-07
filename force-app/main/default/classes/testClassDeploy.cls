@@ -1,10 +1,10 @@
-public class TestClassDeploy{
+public class testClassDeploy{
   public static void testMethods(){
-    //Helxlo World
+    //Hello World
     System.debug('test scanner');  
-    String test = '';
-    if(test == ''){
-         //DO SOMETHING A
+    String test = ''; 
+    if(test == ''){  
+         //DO SOMETHING 
     } 
 }
 public void test1(String t1) {

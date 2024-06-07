@@ -24,7 +24,7 @@ public class rollUpSummaryTest {
         insert newOp;
     }
 
-    /*
+    
     @isTest    
     public static void testDeleteOpp(){
         Opportunity op = [SELECT Id from Opportunity where Name = 'Opportunity2'];
@@ -38,7 +38,6 @@ public class rollUpSummaryTest {
         System.assertEquals(4000, checkAc[0].Total_Revenue__c);
         System.assertEquals(500, checkAc[0].Average_Revenue__c);
     }
-*/
     
     @isTest
     public static void testUpdateOpp(){
