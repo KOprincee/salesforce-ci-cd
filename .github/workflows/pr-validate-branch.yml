@@ -80,7 +80,12 @@ jobs:
             - name: 'Read the Comment Files'
               id: read-file
               run: |
-                  echo "file_content=$(cat violations.txt)" >> $GITHUB_OUTPUT
+                  {
+                    echo 'FILE_CONTENT<<EOF'
+                    $(cat violations.txt)
+                    echo EOF
+                  } >> "$GITHUB_ENV"
+            # echo "file_content=$(cat violations.txt)" >> $GITHUB_OUTPUT
 
             - uses: actions/github-script@v6
               with: 
