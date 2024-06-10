@@ -77,6 +77,7 @@ jobs:
               run: |
                   cd modified-files
                   sfdx scanner:run --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
+                  cd..
 
             #     sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
                   
