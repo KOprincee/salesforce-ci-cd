@@ -2,10 +2,11 @@ const fs = require("fs");
 const outputFilePath = "./testResults/codeCoverageReadableFile.txt";
 const xml2js = require("xml2js");
 
-filename = "./testResults/test-result.json";
+const codeCoverage = "./testResults/test-result.json";
+const package = "./modified-files/package/package.xml";
 
 // Read the JSON file
-fs.readFile(filename, "utf8", (err, data) => {
+fs.readFile(codeCoverage, "utf8", (err, data) => {
   if (err) {
     console.error("Error reading the JSON file:", err);
     return;
@@ -21,7 +22,7 @@ fs.readFile(filename, "utf8", (err, data) => {
     );
 
     // Read the package.xml to verify which class or trigger is present in the current branch
-    fs.readFile(__dirname + "/package.xml", (err, data) => {
+    fs.readFile(__dirname + "" +  package, (err, data) => {
       if (err) {
         console.error("Error reading XML file:", err);
         return;
