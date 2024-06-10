@@ -69,7 +69,9 @@ jobs:
 
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
-                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" 
+                  mkdir changed-sources
+                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/
+
             #--output changed-files/ --generate-delta --source force-app/ 
 
             # - name: 'Scan code - Doing in csv for debugging purpose'
@@ -83,7 +85,7 @@ jobs:
               run: |
                   while IFS= read -r line; do
                       echo "$line"
-                  done < package/package.xml
+                  done < changed-sources/package/package.xml
 
             # - name: 'Generate the comment to be added'
             #   run: |
