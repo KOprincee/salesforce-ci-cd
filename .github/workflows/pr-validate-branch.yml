@@ -21,10 +21,10 @@ jobs:
               with:
                   fetch-depth: 0
                   
-            - name: Get changed files
-              id: changed-files
-              run: |
-                  echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
+            # - name: Get changed files
+            #   id: changed-files
+            #   run: |
+            #       echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
 
             # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
             - name: 'Set up Node.js'
@@ -40,6 +40,11 @@ jobs:
               uses: sfdx-actions/setup-sfdx@v1
               with:
                 sfdx-version: 'latest'
+
+            - name: 'Installing sfdx git delta'
+              run: | 
+                  echo y | sfdx plugins:install sfdx-git-delta
+                  sfdx plugins
 
             # Install java as it is required for Salesforce Scanner
             - name: 'Install Java'
@@ -62,38 +67,39 @@ jobs:
             #   with:
             #     sarif_file: apexScanResults.sarif
 
+            - name: 'Create delta packages for new, modified or deleted metadata'
+              run: | 
+                  mkdir changed-files
+                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-files/ --generate-delta --source force-app/ 
+
             - name: 'Scan code - Doing in csv for debugging purpose'
               run: |
-                  sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --category "Design,Best Practices,Performance,Error Prone,Security" --normalize-severity --outfile 'apexScanResults.csv'
+                  cd changed-files
+                  sfdx scanner:run --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
+
+            #     sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
+                  
             - name: 'Try to read the file - Debugging Purpose'
               run: |
                   while IFS= read -r line; do
                       echo "$line"
                   done < apexScanResults.csv
 
-            - name: 'Generate the comment to be added'
-              run: |
-                  node generateComment.js
-
-            # - name: 'Read the Comment Files'
-            #   id: read-file
+            # - name: 'Generate the comment to be added'
             #   run: |
-            #       echo 'file_content<<EOF' >> $GITHUB_OUTPUT
-            #       $(cat violations.txt) >> $GITHUB_OUTPUT
-            #       echo 'EOF' >> $GITHUB_OUTPUT
-            # # echo "file_content=$(cat violations.txt)" >> $GITHUB_OUTPUT
+            #       node generateComment.js
 
-            - uses: actions/github-script@v6
-              with: 
-                  script: |
-                      const fs = require('fs');
-                      const COMMENTS = fs.readFileSync('violations.txt','utf8').toString();
-                      github.rest.issues.createComment({
-                        issue_number: context.issue.number,
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        body: COMMENTS
-                      });
+            # - uses: actions/github-script@v6
+            #   with: 
+            #       script: |
+            #           const fs = require('fs');
+            #           const COMMENTS = fs.readFileSync('violations.txt','utf8').toString();
+            #           github.rest.issues.createComment({
+            #             issue_number: context.issue.number,
+            #             owner: context.repo.owner,
+            #             repo: context.repo.repo,
+            #             body: COMMENTS
+            #           });
             
             - name: 'Parse TestCases present in build.xml'
               run: |
@@ -111,10 +117,15 @@ jobs:
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
-            # Deploying the Changes
-            - name: 'Deploy changes present in package.xml'
+            # # Deploying the Changes
+            # - name: 'Deploy changes present in package.xml'
+            #   run: |
+            #       sfdx force:source:deploy --manifest package.xml --verbose
+
+            - name: 'Deploy delta changes'
               run: |
-                  sfdx force:source:deploy --manifest package.xml --verbose
+                  sfdx force:source:deploy -p "changed-files/force-app" --postdestructivechanges changed-files/destructiveChangesPost.xml
+
               
             # Check if we have TestClasses to be ran.
             - name: 'Run Apex Test Classes - If Any'
@@ -143,4 +154,3 @@ jobs:
             #   if: ${{ env.APEX_TESTS != '' }}
             #   run: |
             #       sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --verbose
-                  # echo "PR_COMMENT=$COMMENTS" >> $GITHUB_ENV
