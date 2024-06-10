@@ -43,7 +43,7 @@ jobs:
 
             - name: 'Installing sfdx git delta'
               run: | 
-                  echo y | sfdx plugins:install sfdx-git-delta
+                  echo y | sfdx plugins:install sfdx-git-delta --output .
                   sfdx plugins
 
             # # Install java as it is required for Salesforce Scanner
