@@ -83,7 +83,7 @@ jobs:
               run: |
                   while IFS= read -r line; do
                       echo "$line"
-                  done < apexScanResults.csv
+                  done < changed-files/apexScanResults.csv
 
             # - name: 'Generate the comment to be added'
             #   run: |
