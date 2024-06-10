@@ -69,7 +69,7 @@ jobs:
 
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
-                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^"
+                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output .
 
             #--output changed-files/ --generate-delta --source force-app/ 
 
