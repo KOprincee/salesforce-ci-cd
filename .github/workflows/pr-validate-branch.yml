@@ -43,7 +43,7 @@ jobs:
 
             - name: 'Installing sfdx git delta'
               run: | 
-                  echo y | sfdx plugins:install sfdx-git-delta --output .
+                  echo y | sfdx plugins:install sfdx-git-delta
                   sfdx plugins
 
             # # Install java as it is required for Salesforce Scanner
@@ -69,8 +69,7 @@ jobs:
 
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
-                  mkdir changed-sources
-                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/
+                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^"
 
             #--output changed-files/ --generate-delta --source force-app/ 
 
@@ -85,7 +84,7 @@ jobs:
               run: |
                   while IFS= read -r line; do
                       echo "$line"
-                  done < changed-sources/package/package.xml
+                  done < package/package.xml
 
             # - name: 'Generate the comment to be added'
             #   run: |
