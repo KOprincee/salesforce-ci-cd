@@ -82,6 +82,7 @@ jobs:
                   
             - name: 'Try to read the file - Debugging Purpose'
               run: |
+                  cd modified-files
                   while IFS= read -r line; do
                       echo "$line"
                   done < package/package.xml
