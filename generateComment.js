@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const inputFile = "apexScanResults.csv"; // Replace with your actual input file name
+const inputFile = "modified-files/apexScanResults.csv"; // Replace with your actual input file name
 const outputFile = "violations.txt";
 
 // Function to format violation message
