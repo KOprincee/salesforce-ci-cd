@@ -10,5 +10,6 @@ trigger updateTotalOpp on Opportunity (after insert, after delete, after update)
     
     if(Trigger.isUpdate){
         rollUpHelper.updateOperation(Trigger.New, Trigger.OldMap);
+        rollUpHelper.test1('ABC','XYZ');
     }
 }
