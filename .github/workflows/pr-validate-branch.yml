@@ -73,19 +73,24 @@ jobs:
                   mkdir modified-files
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output modified-files/ --generate-delta --source force-app/ 
 
-            - name: 'Scan code - Doing in csv for debugging purpose'
-              run: |
-                  cd modified-files
-                  sfdx scanner:run --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
-                  
-            #     sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
-                  
-            # - name: 'Try to read the file - Debugging Purpose'
+            # - name: 'Scan code - Doing in csv for debugging purpose'
             #   run: |
             #       cd modified-files
-            #       while IFS= read -r line; do
-            #           echo "$line"
-            #       done < package/package.xml
+            #       sfdx scanner:run --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
+
+            #     sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
+
+            - name: 'Scan code - DFA'
+              run: |
+                  sf scanner run dfa --target './modified-files/force-app/main/default/classes/*.cls' --projectdir './modified-files/force-app/' --format csv --normalize-severity --outfile 'apexScanResultsDFA.csv'
+                  
+                  
+            - name: 'Try to read the file - Debugging Purpose'
+              run: |
+                  cd modified-files
+                  while IFS= read -r line; do
+                      echo "$line"
+                  done < apexScanResultsDFA.csv
 
             - name: 'Generate the comment to be added'
               run: |
