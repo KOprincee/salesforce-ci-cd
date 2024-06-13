@@ -82,7 +82,7 @@ jobs:
 
             - name: 'Scan code - DFA'
               run: |
-                  sf scanner run dfa --target ./modified-files/force-app/main/default/triggers/*.trigger, ./modified-files/force-app/main/default/classes/*.cls  --projectdir ./force-app/ --engine pmd,eslint --format csv --normalize-severity --outfile 'apexScanResultsDFA.csv' 
+                  sf scanner run dfa --target ./modified-files/force-app/main/default/triggers/*.trigger, ./modified-files/force-app/main/default/classes/*.cls  --projectdir ./force-app/ --format csv --normalize-severity --outfile 'apexScanResultsDFA.csv' 
                   
                   
             - name: 'Try to read the file - Debugging Purpose'
