@@ -27,13 +27,13 @@ jobs:
             #       echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
 
             # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
-            - name: 'Set up Node.js'
-              uses: actions/setup-node@v2
-              with:
-                node-version: 21
+            # - name: 'Set up Node.js'
+            #   uses: actions/setup-node@v2
+            #   with:
+            #     node-version: 21
 
-            - name: 'Install dependencies to Parse TestCases'
-              run: npm install xml2js
+            # - name: 'Install dependencies to Parse TestCases'
+            #   run: npm install xml2js
             
             # Install Salesforce CLI
             - name: 'Install Salesforce CLI'
@@ -71,19 +71,20 @@ jobs:
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
                   mkdir modified-files
-                  cp custom-pmd.xml modified-files
+                  cp custom-pmd.xml ./modified-files
                   sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output modified-files/ --generate-delta --source force-app/ 
 
-            # - name: 'Scan code - Doing in csv for debugging purpose'
-            #   run: |
-            #       cd modified-files
-            #       sfdx scanner:run --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
+            - name: 'Scan code - Doing in csv for debugging purpose'
+              run: |
+                  cd modified-files
+                  sfdx scanner:run --format csv --target ./modified-files/force-app/* --pmdconfig custom-pmd.xml --outfile 'apexScanResults.csv'
 
             #     sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
 
-            - name: 'Scan code - DFA'
-              run: |
-                  sf scanner run dfa --target './modified-files/force-app/main/default/classes/*.cls' --projectdir './modified-files/force-app/' --format csv --normalize-severity --outfile 'apexScanResultsDFA.csv'
+            # DO NOT UNCOMMENT
+            # - name: 'Scan code - DFA'
+            #   run: |
+            #       sf scanner run dfa --target ./modified-files/force-app/main/default/triggers/*.trigger, ./modified-files/force-app/main/default/classes/*.cls  --projectdir ./force-app/ --format csv --normalize-severity --outfile 'apexScanResultsDFA.csv' 
                   
                   
             - name: 'Try to read the file - Debugging Purpose'
@@ -91,55 +92,55 @@ jobs:
                   cd modified-files
                   while IFS= read -r line; do
                       echo "$line"
-                  done < apexScanResultsDFA.csv
+                  done < apexScanResults.csv
 
-            - name: 'Generate the comment to be added'
-              run: |
-                  node generateComment.js
+            # - name: 'Generate the comment to be added'
+            #   run: |
+            #       node generateComment.js
 
-            - uses: actions/github-script@v6
-              with: 
-                  script: |
-                      const fs = require('fs');
-                      const COMMENTS = fs.readFileSync('violations.txt','utf8').toString();
-                      github.rest.issues.createComment({
-                        issue_number: context.issue.number,
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        body: COMMENTS
-                      });
+            # - uses: actions/github-script@v6
+            #   with: 
+            #       script: |
+            #           const fs = require('fs');
+            #           const COMMENTS = fs.readFileSync('violations.txt','utf8').toString();
+            #           github.rest.issues.createComment({
+            #             issue_number: context.issue.number,
+            #             owner: context.repo.owner,
+            #             repo: context.repo.repo,
+            #             body: COMMENTS
+            #           });
             
-            - name: 'Parse TestCases present in build.xml'
-              run: |
-                  node parse.js              
-                  TESTS=$(cat ApexTests.txt)       
-                  echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
+            # - name: 'Parse TestCases present in build.xml'
+            #   run: |
+            #       node parse.js              
+            #       TESTS=$(cat ApexTests.txt)       
+            #       echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
 
-            # Store secret for both orgs
-            - name: 'Populate auth file with SFDX_URL secret of the QA'
-              shell: bash
-              run: |
-                  echo ${{ secrets.SFDX_INTEGRATION_URL }} > ./SFDX_INTEGRATION_URL.txt
+            # # Store secret for both orgs
+            # - name: 'Populate auth file with SFDX_URL secret of the QA'
+            #   shell: bash
+            #   run: |
+            #       echo ${{ secrets.SFDX_INTEGRATION_URL }} > ./SFDX_INTEGRATION_URL.txt
 
-            # Authenticate to org
-            - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+            # # Authenticate to org
+            # - name: 'Authenticate to Integration Org'
+            #   run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
             # Deploying the Changes
             # - name: 'Deploy changes present in package.xml'
             #   run: |
             #       sfdx force:source:deploy --manifest package.xml --verbose
 
-            - name: 'Deploy delta changes'
-              run: |
-                  sfdx force:source:deploy -x modified-files/package/package.xml --postdestructivechanges modified-files/destructiveChanges/destructiveChanges.xml
+            # - name: 'Deploy delta changes'
+            #   run: |
+            #       sfdx force:source:deploy -x modified-files/package/package.xml --postdestructivechanges modified-files/destructiveChanges/destructiveChanges.xml
               
             # Check if we have TestClasses to be ran.
-            - name: 'Run Apex Test Classes - If Any'
-              if: ${{ env.APEX_TESTS != '' }}
-              run: |
-                  mkdir testResuts
-                  sfdx force:apex:test:run --class-names ${{ env.APEX_TESTS }} --code-coverage --synchronous --outputdir ./testResults
+            # - name: 'Run Apex Test Classes - If Any'
+            #   if: ${{ env.APEX_TESTS != '' }}
+            #   run: |
+            #       mkdir testResuts
+            #       sfdx force:apex:test:run --class-names ${{ env.APEX_TESTS }} --code-coverage --synchronous --outputdir ./testResults
 
             # # Get the Code Coverage for the Above Test Clases
             # - name: 'Get the Code Coverage for Each of the Class'
