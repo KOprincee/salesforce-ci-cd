@@ -78,7 +78,7 @@ jobs:
             - name: 'Scan code - Doing in csv for debugging purpose'
               run: |
                   cd modified-files
-                  sfdx scanner:run --format csv --target ./modified-files/force-app/* --pmdconfig custom-pmd.xml --outfile 'apexScanResults.csv'
+                  sfdx scanner:run --format csv --target './**/*.cls' --pmdconfig custom-pmd.xml --outfile 'apexScanResults.csv'
 
             #     sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
 
