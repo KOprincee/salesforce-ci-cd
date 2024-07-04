@@ -32,8 +32,8 @@ jobs:
               with:
                 node-version: 21
 
-            # - name: 'Install dependencies to Parse TestCases'
-            #   run: npm install xml2js
+            - name: 'Install dependencies to Parse TestCases'
+              run: npm install xml2js
             
             # Install Salesforce CLI
             - name: 'Install Salesforce CLI'
