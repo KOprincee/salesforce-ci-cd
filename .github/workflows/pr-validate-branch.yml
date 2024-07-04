@@ -28,7 +28,7 @@ jobs:
 
             # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
             - name: 'Set up Node.js'
-              uses: actions/setup-node@v3
+            - uses: actions/setup-node@v3
               with:
                 node-version: '14'
 
