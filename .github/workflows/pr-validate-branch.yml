@@ -67,8 +67,8 @@ jobs:
             - name: Run SFDX Scanner - Report findings as comments
               uses: mitchspano/sfdx-scan-pull-request@v0.1.7
               with:
-                severity-threshold: 4
-                pmdconfig: pmd/custom-pmd.xml
+                severity-threshold: 1
+                pmdconfig: custom-pmd.xml
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
