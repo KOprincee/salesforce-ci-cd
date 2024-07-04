@@ -32,20 +32,20 @@ jobs:
               with:
                 node-version: 21
 
-            - name: 'Install dependencies to Parse TestCases'
-              run: npm install xml2js
+            # - name: 'Install dependencies to Parse TestCases'
+            #   run: npm install xml2js
             
             # Install Salesforce CLI
-            - name: 'Install Salesforce CLI'
-              uses: sfdx-actions/setup-sfdx@v1
-              with:
-                sfdx-version: 'latest'
+            # - name: 'Install Salesforce CLI'
+            #   uses: sfdx-actions/setup-sfdx@v1
+            #   with:
+            #     sfdx-version: 'latest'
             
             # Installing SFDX GIT Delta plugin
-            - name: 'Installing sfdx git delta'
-              run: | 
-                  echo y | sfdx plugins:install sfdx-git-delta
-                  sfdx plugins
+            # - name: 'Installing sfdx git delta'
+            #   run: | 
+            #       echo y | sfdx plugins:install sfdx-git-delta
+            #       sfdx plugins
 
             # Install java as it is required for Salesforce Scanner
             - name: 'Install Java'
@@ -55,8 +55,22 @@ jobs:
                 java-version: '11'
 
             # Install SFDX scanner
-            - name: 'Installing SFDX scanner'
-              run: sfdx plugins:install @salesforce/sfdx-scanner
+            # - name: 'Installing SFDX scanner'
+            #   run: node_modules/sfdx-cli/bin/run npm i @salesforce/sfdx-scanner
+            # run: sfdx plugins:install @salesforce/sfdx-scanner
+
+            - name: Install SFDX CLI and Scanner
+              run: |
+                  npm install sfdx-cli
+                  node_modules/sfdx-cli/bin/run plugins:install @salesforce/sfdx-scanner
+
+            - name: Run SFDX Scanner - Report findings as comments
+              uses: mitchspano/sfdx-scan-pull-request@v0.1.7
+              with:
+                severity-threshold: 1
+                pmdconfig: custom-pmd.xml
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             # - name: 'Scan code - Doing to Display it on PR created'
             #   run: |
@@ -68,16 +82,16 @@ jobs:
             #   with:
             #     sarif_file: apexScanResults.sarif
 
-            - name: 'Create delta packages for new, modified or deleted metadata'
-              run: | 
-                  mkdir modified-files
-                  cp custom-pmd.xml ./modified-files
-                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output modified-files/ --generate-delta --source force-app/ 
+            # - name: 'Create delta packages for new, modified or deleted metadata'
+            #   run: | 
+            #       mkdir modified-files
+            #       cp custom-pmd.xml ./modified-files
+            #       sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output modified-files/ --generate-delta --source force-app/ 
 
-            - name: 'Scan code - Doing in csv for debugging purpose'
-              run: |
-                  cd modified-files
-                  sfdx scanner:run --format csv --target ./modified-files/force-app/* --pmdconfig custom-pmd.xml --outfile 'apexScanResults.csv'
+            # - name: 'Scan code - Doing in csv for debugging purpose'
+            #   run: |
+            #       cd modified-files
+            #       sfdx scanner:run --format csv --target './**/*.cls' --pmdconfig custom-pmd.xml --outfile 'apexScanResults.csv'
 
             #     sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
 
@@ -87,12 +101,12 @@ jobs:
             #       sf scanner run dfa --target ./modified-files/force-app/main/default/triggers/*.trigger, ./modified-files/force-app/main/default/classes/*.cls  --projectdir ./force-app/ --format csv --normalize-severity --outfile 'apexScanResultsDFA.csv' 
                   
                   
-            - name: 'Try to read the file - Debugging Purpose'
-              run: |
-                  cd modified-files
-                  while IFS= read -r line; do
-                      echo "$line"
-                  done < apexScanResults.csv
+            # - name: 'Try to read the file - Debugging Purpose'
+            #   run: |
+            #       cd modified-files
+            #       while IFS= read -r line; do
+            #           echo "$line"
+            #       done < apexScanResults.csv
 
             # - name: 'Generate the comment to be added'
             #   run: |

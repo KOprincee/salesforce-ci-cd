@@ -7,7 +7,8 @@
     <description>
         My custom rules
     </description>
-        <!-- IGNORE EXTERNAL LIBS -->
+
+    <!-- IGNORE EXTERNAL LIBS -->
     <include-pattern>.*/force-app/main/default/.*</include-pattern>
 
 
