@@ -27,10 +27,10 @@ jobs:
             #       echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
 
             # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
-            # - name: 'Set up Node.js'
-            #   uses: actions/setup-node@v2
-            #   with:
-            #     node-version: 21
+            - name: 'Set up Node.js'
+              uses: actions/setup-node@v2
+              with:
+                node-version: 21
 
             # - name: 'Install dependencies to Parse TestCases'
             #   run: npm install xml2js
