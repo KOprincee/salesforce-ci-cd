@@ -6,6 +6,7 @@ public class rollUpSummaryTest {
     public static void testData(){ 
         Account acc = new Account (Name = 'TestAccount');
         insert acc;
+        system.debug(acc);
 
 
     
