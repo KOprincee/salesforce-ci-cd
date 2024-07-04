@@ -56,7 +56,7 @@ jobs:
 
             # Install SFDX scanner
             - name: 'Installing SFDX scanner'
-              run: sfdx plugins:install @salesforce/sfdx-scanner@latest
+              run: sfdx plugins:install @salesforce/sfdx-scanner
 
             # - name: 'Scan code - Doing to Display it on PR created'
             #   run: |
