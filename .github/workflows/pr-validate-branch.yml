@@ -56,7 +56,7 @@ jobs:
 
             # Install SFDX scanner
             - name: 'Installing SFDX scanner'
-              run: npm i @salesforce/sfdx-scanner
+              run: node_modules/sfdx-cli/bin/run npm i @salesforce/sfdx-scanner
             # run: sfdx plugins:install @salesforce/sfdx-scanner
 
             - name: Run SFDX Scanner - Report findings as comments
