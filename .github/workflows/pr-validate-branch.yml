@@ -32,6 +32,10 @@ jobs:
               with:
                 node-version: 21
 
+            - name: 'Test'
+              run: yarn cache clean
+                   npm install -g yarn
+
             - name: 'Install dependencies to Parse TestCases'
               run: npm install xml2js
             
