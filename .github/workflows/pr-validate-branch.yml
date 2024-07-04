@@ -28,9 +28,12 @@ jobs:
 
             # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
             - name: 'Set up Node.js'
-            - uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
-                node-version: '14'
+                node-version: 21
+
+            - name: 'Test'
+              run: yarn install --ignore-engines
 
             - name: 'Install dependencies to Parse TestCases'
               run: npm install xml2js
@@ -41,16 +44,18 @@ jobs:
               with:
                 sfdx-version: 'latest'
             
-            - name: 'Installing sfdx git delta'
-              run: | 
-                  echo y | sfdx plugins:install sfdx-git-delta
-                  sfdx plugins 
+            # Installing SFDX GIT Delta plugin
+            # - name: 'Installing sfdx git delta'
+            #   run: | 
+            #       echo y | sfdx plugins:install sfdx-git-delta
+            #       sfdx plugins
 
-            # Install java as it is required for the next step
-            - name: 'Installing java'
-              run: |
-                sudo apt-get update
-                sudo apt install default-jdk
+            # Install java as it is required for Salesforce Scanner
+            - name: 'Install Java'
+              uses: actions/setup-java@v2
+              with:
+                distribution: 'adopt'
+                java-version: '11'
 
             # Install SFDX scanner
             - name: 'Installing SFDX scanner'
