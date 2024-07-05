@@ -55,8 +55,8 @@ jobs:
 
             - name: Install SFDX CLI and Scanner
               run: |
-                  npm install @salesforce/cli
-                  node_modules/sfdx-cli/bin/run plugins:install @salesforce/sfdx-scanner
+                  npm install sfdx-cli -g
+                  sfdx plugins:install @salesforce/sfdx-scanner
 
             - name: Run SFDX Scanner - Report findings as comments
               uses: mitchspano/sfdx-scan-pull-request@v0.1.7
