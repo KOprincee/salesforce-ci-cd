@@ -137,7 +137,7 @@ jobs:
 
             # Authenticate to org
             - name: 'Authenticate to Integration Org'
-              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+              run: npx sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
             # Deploying the Changes
             # - name: 'Deploy changes present in package.xml'
@@ -146,14 +146,14 @@ jobs:
 
             - name: 'Deploy delta changes'
               run: |
-                  sfdx force:source:deploy -x modified-files/package/package.xml --postdestructivechanges modified-files/destructiveChanges/destructiveChanges.xml
+                  npx sfdx force:source:deploy -x modified-files/package/package.xml --postdestructivechanges modified-files/destructiveChanges/destructiveChanges.xml
               
             # Check if we have TestClasses to be ran.
             - name: 'Run Apex Test Classes - If Any'
               if: ${{ env.APEX_TESTS != '' }}
               run: |
                   mkdir testResuts
-                  sfdx force:apex:test:run --class-names ${{ env.APEX_TESTS }} --code-coverage --synchronous --outputdir ./testResults
+                  npx sfdx force:apex:test:run --class-names ${{ env.APEX_TESTS }} --code-coverage --synchronous --outputdir ./testResults
 
             # Get the Code Coverage for the Above Test Clases
             - name: 'Get the Code Coverage for Each of the Class'
