@@ -55,7 +55,7 @@ jobs:
 
             - name: Install SFDX CLI and Scanner
               run: |
-                  npm install sfdx-cli
+                  npm install @salesforce/cli --global
                   node_modules/sfdx-cli/bin/run plugins:install @salesforce/sfdx-scanner
 
             - name: Run SFDX Scanner - Report findings as comments
@@ -79,7 +79,7 @@ jobs:
             # Installing SFDX GIT Delta plugin
             - name: 'Installing sfdx git delta'
               run: | 
-                  echo y | node_modules/sfdx-cli/bin/run plugins:install sfdx-git-delta
+                  echo y | sfdx plugins:install sfdx-git-delta
                   sfdx plugins            
 
             - name: 'Create delta packages for new, modified or deleted metadata'
