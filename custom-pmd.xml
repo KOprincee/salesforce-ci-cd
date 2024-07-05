@@ -7,7 +7,7 @@
     <description>
         My custom rules
     </description>
-    
+
     <include-pattern>.*/force-app/main/default/.*</include-pattern>
     <!-- STANDARD RULES -->  
     
