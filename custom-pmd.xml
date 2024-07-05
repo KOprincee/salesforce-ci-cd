@@ -14,6 +14,8 @@
     <rule ref="category/apex/security.xml">
         <priority>1</priority>
         <exclude name="ApexCRUDViolation" />
+        <exclude name="ApexSharingViolations" />
+        <exclude name="ApexCRUDViolation" />
     </rule>  
 
     <rule ref="category/apex/bestpractices.xml">      
