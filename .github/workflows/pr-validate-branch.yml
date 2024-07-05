@@ -55,8 +55,8 @@ jobs:
 
             - name: Install SFDX CLI and Scanner
               run: |
-                  npm install sfdx-cli -g
-                  sfdx plugins:install @salesforce/sfdx-scanner
+                  npm install sfdx-cli
+                  npx sfdx plugins:install @salesforce/sfdx-scanner
 
             - name: Run SFDX Scanner - Report findings as comments
               uses: mitchspano/sfdx-scan-pull-request@v0.1.7
@@ -79,13 +79,13 @@ jobs:
             # Installing SFDX GIT Delta plugin
             - name: 'Installing sfdx git delta'
               run: | 
-                  echo y | sfdx plugins:install sfdx-git-delta
-                  sfdx plugins            
+                  echo y | npx sfdx plugins:install sfdx-git-delta
+                  npx sfdx plugins            
 
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
                   mkdir modified-files
-                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output modified-files/ --generate-delta --source force-app/ 
+                  npx sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output modified-files/ --generate-delta --source force-app/ 
 
             # - name: 'Scan code - Doing in csv for debugging purpose'
             #   run: |
