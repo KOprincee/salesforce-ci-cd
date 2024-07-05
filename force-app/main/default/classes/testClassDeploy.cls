@@ -3,7 +3,7 @@ public class testClassDeploy{
     //Hello World
     System.debug('test scanner');  
     String test = ''; 
-    String abc = '';
+    //String abc = '';
     if(test == ''){  
             //DO SOMETHING
     } 
