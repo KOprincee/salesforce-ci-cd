@@ -1,5 +1,5 @@
 //Test deploy
-public class rollUpHelper{ 
+public class rollUpHelper{
 
     // public void test3(String t1) {
     //     Database.query('SELECT Id FROM Account' + t1);
