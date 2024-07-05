@@ -1,14 +1,11 @@
 public class testClassDeploy{
-  public static void testMethods(){
+    public static void testMethods(){
     //Hello World
     System.debug('test scanner');  
     String test = ''; 
-String abc = '';
+    String abc = '';
     if(test == ''){  
-         //DO SOMETHING
+            //DO SOMETHING
     } 
-}
-public void test1(String t1) {
-        Database.query('SELECT Id FROM Account' + t1);
     }
 }
