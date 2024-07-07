@@ -1,9 +1,9 @@
 const fs = require("fs");
-const outputFilePath = "./testResults/codeCoverageReadableFile.txt";
+const outputFilePath = "/testResults/codeCoverageReadableFile.txt";
 const xml2js = require("xml2js");
 
-const codeCoverage = "./testResults/test-result.json";
-const package = "./modified-files/package/package.xml";
+const codeCoverage = "/testResults/test-result.json";
+const package = "/modified-files/package/package.xml";
 
 // Read the JSON file
 fs.readFile(codeCoverage, "utf8", (err, data) => {
