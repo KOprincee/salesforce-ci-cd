@@ -1,4 +1,4 @@
-/*Autjor*/
+/*Author*/
 @isTest
 public class rollUpSummaryTest {
     
