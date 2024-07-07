@@ -136,6 +136,7 @@ jobs:
 
             #Fail the PR if the Code Coverage is Less than 85
             - name: 'If the Code Coverage for any class is > 85% Exit'
+              if: ${{ env.APEX_TESTS != '' }}
               run: |
                   if grep -qvx 'true' ./testResults/codeCoverageReadableFile.txt; then
                       exit 1
