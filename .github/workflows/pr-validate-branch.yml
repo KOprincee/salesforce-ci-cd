@@ -115,7 +115,26 @@ jobs:
               run: |
                   node qualityGateCheck.js
 
-            # Fail the PR if the Code Coverage is Less than 85
+            - uses: actions/github-script@v6
+              if: ${{ env.APEX_TESTS != '' && success() }}
+              with: 
+                  script: |
+                      const fs = require('fs');
+                      const qc = fs.readFileSync('./testResults/codeCoverageReadableFile.txt','utf8').toString();
+                      let COMMENTS = '';
+                      if(qc == 'true'){
+                          COMMENTS = 'All Classes have Code Coverage of more than 85%';
+                      }else{
+                          COMMENTS = qc;
+                      }
+                      github.rest.issues.createComment({
+                        issue_number: context.issue.number,
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        body: COMMENTS
+                      });
+
+            #Fail the PR if the Code Coverage is Less than 85
             - name: 'If the Code Coverage for any class is > 85% Exit'
               run: |
                   if grep -qvx 'true' ./testResults/codeCoverageReadableFile.txt; then
