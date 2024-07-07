@@ -1,5 +1,5 @@
 const fs = require("fs");
-const outputFilePath = "/testResults/codeCoverageReadableFile.txt";
+const outputFilePath = "./testResults/codeCoverageReadableFile.txt";
 const xml2js = require("xml2js");
 
 const codeCoverage = "./testResults/test-result.json";
@@ -18,11 +18,11 @@ fs.readFile(codeCoverage, "utf8", (err, data) => {
 
     // Extract coveredPercent values from coverage.coverage array
     const coveredPercents = jsonData.coverage.coverage.map(
-      (item) => item.coveredPercent + ";" + item.name,
+      (item) => item.coveredPercent + ";" + item.name
     );
 
     // Read the package.xml to verify which class or trigger is present in the current branch
-    fs.readFile(__dirname + "" +  package, (err, data) => {
+    fs.readFile(__dirname + "" + package, (err, data) => {
       if (err) {
         console.error("Error reading XML file:", err);
         return;
@@ -75,7 +75,7 @@ fs.readFile(codeCoverage, "utf8", (err, data) => {
             } else {
               console.log(qualityCheckResult.trim());
             }
-          },
+          }
         );
       });
     });
