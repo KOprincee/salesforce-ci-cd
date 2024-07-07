@@ -34,12 +34,6 @@ jobs:
 
             - name: 'Install dependencies to Parse TestCases'
               run: npm install xml2js
-            
-            # Install Salesforce CLI
-            # - name: 'Install Salesforce CLI'
-            #   uses: sfdx-actions/setup-sfdx@v1
-            #   with:
-            #     sfdx-version: 'latest'
 
             # Install java as it is required for Salesforce Scanner
             - name: 'Install Java'
@@ -47,11 +41,6 @@ jobs:
               with:
                 distribution: 'adopt'
                 java-version: '11'
-
-            # Install SFDX scanner
-            # - name: 'Installing SFDX scanner'
-            #   run: node_modules/sfdx-cli/bin/run npm i @salesforce/sfdx-scanner
-            # run: sfdx plugins:install @salesforce/sfdx-scanner
 
             - name: Install SFDX CLI and Scanner
               run: |
@@ -66,16 +55,6 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            # - name: 'Scan code - Doing to Display it on PR created'
-            #   run: |
-            #       sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format sarif --engine pmd,eslint --outfile 'apexScanResults.sarif'
-                  
-            # # Now we upload the .sarif file and the plugin will check for any violations
-            # - name: 'Upload SARIF file on PR'
-            #   uses: github/codeql-action/upload-sarif@v2
-            #   with:
-            #     sarif_file: apexScanResults.sarif
-
             # Installing SFDX GIT Delta plugin
             - name: 'Installing sfdx git delta'
               run: | 
@@ -85,27 +64,7 @@ jobs:
             - name: 'Create delta packages for new, modified or deleted metadata'
               run: | 
                   mkdir modified-files
-                  npx sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output modified-files/ --generate-delta --source force-app/ 
-
-            # - name: 'Scan code - Doing in csv for debugging purpose'
-            #   run: |
-            #       cd modified-files
-            #       sfdx scanner:run --format csv --target './**/*.cls' --pmdconfig custom-pmd.xml --outfile 'apexScanResults.csv'
-
-            #     sfdx scanner:run --target ${{ steps.changed-files.outputs.changed_files }} --format csv --engine pmd,eslint --normalize-severity --outfile 'apexScanResults.csv'
-
-            # DO NOT UNCOMMENT
-            # - name: 'Scan code - DFA'
-            #   run: |
-            #       sf scanner run dfa --target ./modified-files/force-app/main/default/triggers/*.trigger, ./modified-files/force-app/main/default/classes/*.cls  --projectdir ./force-app/ --format csv --normalize-severity --outfile 'apexScanResultsDFA.csv' 
-                  
-                  
-            # - name: 'Try to read the file - Debugging Purpose'
-            #   run: |
-            #       cd modified-files
-            #       while IFS= read -r line; do
-            #           echo "$line"
-            #       done < apexScanResults.csv
+                  npx sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output modified-files/ --generate-delta --source force-app/
 
             # - name: 'Generate the comment to be added'
             #   run: |
@@ -139,11 +98,6 @@ jobs:
             - name: 'Authenticate to Integration Org'
               run: npx sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
-            # Deploying the Changes
-            # - name: 'Deploy changes present in package.xml'
-            #   run: |
-            #       sfdx force:source:deploy --manifest package.xml --verbose
-
             - name: 'Deploy delta changes'
               run: |
                   npx sfdx force:source:deploy -x modified-files/package/package.xml --postdestructivechanges modified-files/destructiveChanges/destructiveChanges.xml
@@ -169,9 +123,3 @@ jobs:
                   else
                       echo "All Classes have Code Coverage of more than 85%"
                   fi
-                   
-            # Validate the changes and run the testCases if required
-            # - name: 'Validate changes present in package.xml - Run Tests'
-            #   if: ${{ env.APEX_TESTS != '' }}
-            #   run: |
-            #       sfdx force:source:deploy --manifest package.xml --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --verbose
