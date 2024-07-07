@@ -123,7 +123,7 @@ jobs:
                       const qc = fs.readFileSync('./testResults/codeCoverageReadableFile.txt','utf8').toString();
                       let COMMENTS = '';
                       if(qc == 'true'){
-                          COMMENTS = 'All Classes have Code Coverage of more than 85%';
+                          COMMENTS = 'All Classes have Code Coverage of more than 85%. All things are in place to merge the PR.';
                       }else{
                           COMMENTS = qc;
                       }
