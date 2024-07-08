@@ -17,37 +17,35 @@ jobs:
         steps:
                       
             # Checkout the source code
-            - uses: actions/checkout@v3
+            - name: 'Checking out the Code to deploy in Target Org'
+              uses: actions/checkout@v3
               with:
                   fetch-depth: 0
-                  
-            # - name: Get changed files
-            #   id: changed-files
-            #   run: |
-            #       echo "changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)" >> $GITHUB_OUTPUT
 
-            # Install Node JS and related dependencies so that it can be  able to read the build.xml for TestCases
-            - name: 'Set up Node.js'
+            # Install Node JS and related dependencies so that it can be able to read the build.xml for TestCases
+            - name: 'Installing Node.js for SFDX CLI'
               uses: actions/setup-node@v4
               with:
                 node-version: 21
 
-            - name: 'Install dependencies to Parse TestCases'
+            - name: 'Installing dependencies to Parse TestCases'
               run: npm install xml2js
 
-            # Install java as it is required for Salesforce Scanner
-            - name: 'Install Java'
+            # Installing java as it is required for Salesforce Scanner
+            - name: 'Installing Java for SFDX Scanner'
               uses: actions/setup-java@v2
               with:
                 distribution: 'adopt'
                 java-version: '11'
 
-            - name: Install SFDX CLI and Scanner
+            # Installing SFDX CLI and SFDX Scanner
+            - name: 'Installing SFDX CLI and Scanner'
               run: |
                   npm install sfdx-cli
                   npx sfdx plugins:install @salesforce/sfdx-scanner
 
-            - name: Run SFDX Scanner - Report findings as comments
+            # Static Code Analysis
+            - name: 'Static Code Analysis In Progress - Report findings as comments on PR'
               uses: mitchspano/sfdx-scan-pull-request@v0.1.7
               with:
                 severity-threshold: 1
@@ -66,29 +64,7 @@ jobs:
                   mkdir modified-files
                   npx sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output modified-files/ --generate-delta --source force-app/
 
-            # - name: 'Generate the comment to be added'
-            #   run: |
-            #       node generateComment.js
-
-            # - uses: actions/github-script@v6
-            #   with: 
-            #       script: |
-            #           const fs = require('fs');
-            #           const COMMENTS = fs.readFileSync('violations.txt','utf8').toString();
-            #           github.rest.issues.createComment({
-            #             issue_number: context.issue.number,
-            #             owner: context.repo.owner,
-            #             repo: context.repo.repo,
-            #             body: COMMENTS
-            #           });
-            
-            - name: 'Parse TestCases present in build.xml'
-              run: |
-                  node parse.js              
-                  TESTS=$(cat ApexTests.txt)       
-                  echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
-
-            # Store secret for both orgs
+            # Store secret for target Org.
             - name: 'Populate auth file with SFDX_URL secret of the QA'
               shell: bash
               run: |
@@ -98,7 +74,13 @@ jobs:
             - name: 'Authenticate to Integration Org'
               run: npx sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
-            - name: 'Deploy delta changes - No Code Changes'
+            - name: 'Parse TestCases present in build.xml'
+              run: |
+                  node parse.js              
+                  TESTS=$(cat ApexTests.txt)       
+                  echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
+
+            - name: 'Deploy delta changes - Only metadata'
               if: ${{ env.APEX_TESTS == '' }}
               run: |
                   npx sfdx force:source:deploy -x modified-files/package/package.xml --postdestructivechanges modified-files/destructiveChanges/destructiveChanges.xml
