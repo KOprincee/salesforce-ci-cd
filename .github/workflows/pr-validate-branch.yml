@@ -98,9 +98,15 @@ jobs:
             - name: 'Authenticate to Integration Org'
               run: npx sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
-            - name: 'Deploy delta changes'
+            - name: 'Deploy delta changes - No Code Changes'
+              if: ${{ env.APEX_TESTS == '' }}
               run: |
                   npx sfdx force:source:deploy -x modified-files/package/package.xml --postdestructivechanges modified-files/destructiveChanges/destructiveChanges.xml
+
+            - name: 'Deploy delta changes - Code Changes'
+              if: ${{ env.APEX_TESTS != '' }}
+              run: |
+                  npx sfdx force:source:deploy --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} -x modified-files/package/package.xml --postdestructivechanges modified-files/destructiveChanges/destructiveChanges.xml
               
             # Check if we have TestClasses to be ran.
             - name: 'Run Apex Test Classes - If Any'
