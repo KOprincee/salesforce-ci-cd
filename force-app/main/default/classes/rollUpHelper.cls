@@ -20,7 +20,6 @@ public class rollUpHelper{
         Set <Id> accId = new Set <Id>();
         for(Opportunity op : newOpp){
             accId.add(op.AccountId);
-            System.debug('Test');
         } 
         updateRollupFields(accId);
     }
