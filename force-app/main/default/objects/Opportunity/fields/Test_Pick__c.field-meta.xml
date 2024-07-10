@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Test_Pick__c</fullName>
+    <externalId>false</externalId>
+    <label>Test Pick</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>prince</fullName>
+                <default>false</default>
+                <label>prince</label>
+            </value>
+            <value>
+                <fullName>kothari</fullName>
+                <default>false</default>
+                <label>kothari</label>
+            </value>
+            <value>
+                <fullName>hello</fullName>
+                <default>false</default>
+                <label>hello</label>
+            </value>
+            <value>
+                <fullName>hi</fullName>
+                <default>false</default>
+                <label>hi</label>
+            </value>
+            <value>
+                <fullName>TestVal</fullName>
+                <default>false</default>
+                <label>TestVal</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
