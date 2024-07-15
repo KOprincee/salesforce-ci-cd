@@ -1,4 +1,3 @@
-# Unique name for this workflow
 name: Validate the changes made in the Pull Request.
 
 # Definition when the workflow should run
