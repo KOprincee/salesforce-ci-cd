@@ -25,15 +25,29 @@ jobs:
               with:
                 sfdx-version: 'latest'
 
+            # Installing SFDX GIT Delta plugin
+            - name: 'Installing sfdx git delta'
+              run: | 
+                  echo y | npx sfdx plugins:install sfdx-git-delta
+                  sfdx plugins   
+
+            - name: 'Create delta packages for new, modified or deleted metadata'
+              run: | 
+                  mkdir modified-files
+                  sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output modified-files/ --generate-delta --source force-app/
+
             # Store secret for orgs
             - name: 'Populate auth file with SFDX_URL secret of the QA'
               shell: bash
               run: |
                   echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+
             # Authenticate to org
             - name: 'Authenticate to Integration Org'
               run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
 
             # Deploy to Org
-            - name: 'Deploy changes present in package.xml'
-              run: sfdx force:source:deploy --manifest package.xml
+            - name: 'Deploy delta changes to QA'
+              run: |
+                  sfdx force:source:deploy -x modified-files/package/package.xml --postdestructivechanges modified-files/destructiveChanges/destructiveChanges.xml
+
