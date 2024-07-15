@@ -1,0 +1,39 @@
+name: Deploy the changes in QA
+
+# Definition when the workflow should run
+on:
+    push:
+      branches: [ development ]
+      paths:
+        - 'force-app/**'
+
+# Jobs to be executed
+jobs:
+    validate-changes-on-QA-org:
+        runs-on: ubuntu-latest
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        steps:
+            # Checkout the source code
+            - name: 'Checkout source code'
+              uses: actions/checkout@v3
+              with:
+                fetch-depth: 0
+
+            # Install Salesforce CLI
+            - name: 'Install Salesforce CLI'
+              uses: sfdx-actions/setup-sfdx@v1
+              with:
+                sfdx-version: 'latest'
+
+            # Store secret for orgs
+            - name: 'Populate auth file with SFDX_URL secret of the QA'
+              shell: bash
+              run: |
+                  echo ${{ secrets.SFDX_INTEGRATION_URL}} > ./SFDX_INTEGRATION_URL.txt
+            # Authenticate to org
+            - name: 'Authenticate to Integration Org'
+              run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a QA
+
+            # Deploy to Org
+            - name: 'Deploy changes present in package.xml'
+              run: sfdx force:source:deploy --manifest package.xml

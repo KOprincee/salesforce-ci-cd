@@ -1,10 +1,6 @@
 //Test deployed
 public class rollUpHelper{
 
-    // public void test3(String t1) {
-    //     Database.query('SELECT Id FROM Account' + t1);
-    // } 
-
     // public void test4(String t1) {
     //     Database.query('SELECT Id FROM Account' + t1);
     // } 
