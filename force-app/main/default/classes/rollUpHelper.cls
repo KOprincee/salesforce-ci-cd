@@ -89,7 +89,7 @@ public class rollUpHelper{
                 
                 accountToUpd.add(updDetails);   
             }
- update accountToUpd;
+            update accountToUpd;
         }
         
         if(!accountToUpd.isEmpty()){
