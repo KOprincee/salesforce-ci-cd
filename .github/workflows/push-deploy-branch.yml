@@ -3,7 +3,7 @@ name: Deploy the changes in QA
 # Definition when the workflow should run
 on:
     push:
-      branches: [ development ]
+      branches: [ integration ]
       paths:
         - 'force-app/**'
 
