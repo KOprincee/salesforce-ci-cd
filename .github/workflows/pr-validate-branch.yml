@@ -15,10 +15,10 @@ jobs:
         steps:
                       
             # Checkout the source code
-            - name: 'Checking out the Code to deploy in Target Org'
-              uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0
+            # - name: 'Checking out the Code to deploy in Target Org'
+            #   uses: actions/checkout@v3
+            #   with:
+            #       fetch-depth: 0
 
             # Install Node JS and related dependencies so that it can be able to read the build.xml for TestCases
             - name: 'Installing Node.js for SFDX CLI'
