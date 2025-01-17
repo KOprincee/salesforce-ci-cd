@@ -2,10 +2,12 @@ name: Validate the changes made in the Pull Request.
 
 # Definition when the workflow should run
 on:
-    pull_request:
-      types: [opened, synchronize]
-      paths:
-        - 'force-app/**'
+  pull_request:
+    types: [opened, synchronize]
+    branches-ignore: 
+      - 'master'
+    paths:
+      - 'force-app/**'
 
 # Jobs to be executed
 jobs:
