@@ -1,4 +1,4 @@
-name: Validate the changes made in the Pull Request.
+name: Deploy Changes to Master.
 
 # Definition when the workflow should run
 on:
