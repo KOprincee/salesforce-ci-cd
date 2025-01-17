@@ -1,0 +1,24 @@
+name: Validate the changes made in the Pull Request.
+
+# Definition when the workflow should run
+on:
+    workflow_dispatch:  # Trigger manually via GitHub UI
+    # If you'd like to specify inputs for the manual trigger, you can do so here.
+    # For example:
+    # inputs:
+    #   branch:
+    #     description: 'Branch to validate changes on'
+    #     required: true
+    #     default: 'master'
+
+# Jobs to be executed
+jobs:
+    deploy-changes-to-master:
+        runs-on: ubuntu-latest
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        steps:
+            # Checkout the source code
+            - name: 'Checking out the Code to deploy in Target Org'
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
