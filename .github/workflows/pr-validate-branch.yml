@@ -29,7 +29,7 @@ jobs:
                 node-version: 21
 
             - name: 'Installing dependencies to Parse TestCases'
-              run: npm install xml2js
+              run: npm install xml2js --legacy-peer-deps
 
             # Installing java as it is required for Salesforce Scanner
             - name: 'Installing Java for SFDX Scanner'
